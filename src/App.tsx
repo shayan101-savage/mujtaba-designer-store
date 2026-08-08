@@ -305,7 +305,7 @@ export default function App() {
 
           {/* Quick Filter Buttons */}
           <div className="flex flex-wrap items-center gap-2.5">
-            {['ALL COLLECTIONS', 'MENSWEAR SHERWANI', 'COUTURE', 'LUXURY LAWN', 'FESTIVE PRET'].map((c) => (
+            {['ALL COLLECTIONS', 'COUTURE', 'LUXURY LAWN', 'FESTIVE PRET'].map((c) => (
               <button
                 key={c}
                 onClick={() => setActiveCategory(c)}

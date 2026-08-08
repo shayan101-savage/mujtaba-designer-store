@@ -1,1 +1,22 @@
+@font-face {
+  font-family: 'Ethnocentric Rg';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ethnocentric Rg'), url('https://fonts.cdnfonts.com/s/6220/ethnocentric%20rg.woff') format('woff');
+  font-display: swap;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .font-ethnocentric {
+    font-family: 'Ethnocentric Rg', system-ui, sans-serif;
+  }
+}
+
 @import "tailwindcss";

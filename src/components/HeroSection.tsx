@@ -167,15 +167,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
           ROYAL BRIDAL & SHERWANI COLLECTION 2026
         </motion.div>
 
-        <motion.h1
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.4 }}
-          className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extralight tracking-[0.25em] uppercase leading-none text-white drop-shadow-2xl"
+          className="flex flex-col items-center gap-4"
         >
-          HAUTE COUTURE <br />
-          <span className="font-bold text-amber-300 tracking-[0.3em]">MUJTABA DESIGNER</span>
-        </motion.h1>
+          <motion.h1 className="font-ethnocentric text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-normal tracking-[0.15em] uppercase leading-none text-white drop-shadow-2xl">
+            MUJTABA DESIGNER
+          </motion.h1>
+          <p className="text-sm sm:text-base uppercase tracking-[0.55em] text-white font-semibold">
+            HAUTE COUTURE
+          </p>
+        </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -195,10 +199,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
           className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-10"
         >
           <button
-            onClick={() => onExploreClick('MENSWEAR SHERWANI')}
+            onClick={() => onExploreClick('COUTURE')}
             className="px-10 py-4 sm:py-5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm tracking-[0.3em] uppercase transition-all shadow-2xl hover:scale-105 flex items-center gap-3 group cursor-pointer border border-amber-300 rounded-xl"
           >
-            BRIDAL SHERWANI
+            BRIDAL COUTURE
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
 

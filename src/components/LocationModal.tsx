@@ -30,7 +30,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
           <div className="border border-stone-200 overflow-hidden relative shadow-xs">
             <iframe
               title="Mujtaba Designer Boutique Location Map"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3401.378776856012!2d74.34863267683935!3d31.51375624747754!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391904f6690460bf%3A0x6b772412e693172e!2sGulberg%20III%2C%20Lahore%2C%20Punjab!5e0!3m2!1sen!2spk!4v1700000000000!5m2!1sen!2spk"
+              src="https://www.google.com/maps?q=Rabi+Saddar,+Adam+Jee+Road,+Rawalpindi,+Pakistan&output=embed"
               width="100%"
               height="260"
               style={{ border: 0 }}
@@ -38,18 +38,18 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
-            <div className="p-3 bg-slate-900 text-white text-xs flex justify-between items-center">
+            <div className="p-3 bg-slate-900 text-white text-xs flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-3">
               <span className="font-medium flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-amber-400" />
-                Main Flagship Store: Gulberg III Boulevard, Lahore
+                Rabi Saddar, Adam Jee Road, Rawalpindi, Pakistan
               </span>
               <a
-                href="https://maps.google.com/?q=Gulberg+III+Lahore"
+                href="https://share.google/ObTR5vvNsyNTTRQAB"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-amber-800 hover:bg-amber-900 text-white text-[10px] font-bold px-3 py-1 uppercase tracking-wider flex items-center gap-1"
               >
-                Open in Google Maps <ExternalLink className="w-3 h-3" />
+                View Location on Google Maps <ExternalLink className="w-3 h-3" />
               </a>
             </div>
           </div>

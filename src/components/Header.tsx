@@ -103,11 +103,11 @@ export const Header: React.FC<HeaderProps> = ({
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-serif text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-[0.25em] text-slate-950 uppercase leading-none">
-              MUJTABA
+            <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-[0.3em] text-slate-950 uppercase leading-none font-ethnocentric">
+              MUJTABA DESIGNER
             </span>
-            <span className="text-[10px] sm:text-[11px] tracking-[0.4em] text-amber-800 font-bold uppercase mt-1">
-              DESIGNER • HAUTE COUTURE
+            <span className="text-[9px] sm:text-[10px] tracking-[0.5em] text-amber-800 font-semibold uppercase mt-1">
+              HAUTE COUTURE
             </span>
           </div>
         </div>

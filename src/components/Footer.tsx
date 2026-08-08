@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phone, MapPin, Mail, MessageSquare, ShieldCheck, Instagram, Facebook, ArrowRight } from 'lucide-react';
+import { Phone, MapPin, Mail, MessageSquare, ShieldCheck, Instagram, Facebook, CreditCard, ArrowRight } from 'lucide-react';
 import logoImg from '../assets/images/mujtaba_gold_logo_1786177848393.jpg';
 
 interface FooterProps {
@@ -36,11 +36,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 />
               </div>
               <div className="flex flex-col">
-                <span className="font-serif text-xl font-bold tracking-[0.3em] text-white uppercase leading-tight">
-                  MUJTABA
+                <span className="font-ethnocentric text-xl font-bold tracking-[0.35em] text-white uppercase leading-tight">
+                  MUJTABA DESIGNER
                 </span>
-                <span className="text-[9px] tracking-[0.4em] text-amber-400 font-semibold uppercase">
-                  DESIGNER
+                <span className="text-[9px] tracking-[0.5em] text-amber-400 font-semibold uppercase">
+                  HAUTE COUTURE
                 </span>
               </div>
             </div>
@@ -72,6 +72,35 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 <MapPin className="w-4 h-4" />
               </button>
             </div>
+            <div className="flex items-center gap-3 pt-3">
+              <a
+                href="https://www.instagram.com/mujtaba_designers_?utm_source=qr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:bg-rose-500 text-white flex items-center justify-center transition-colors"
+                title="Instagram"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.facebook.com/share/1EGmNs7afC/?mibextid=wwXIfr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:bg-blue-600 text-white flex items-center justify-center transition-colors"
+                title="Facebook"
+              >
+                <Facebook className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.tiktok.com/@mujtabadesigenero?_r=1&_t=ZS-98iWriHXdFE"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-colors text-[11px] font-bold uppercase"
+                title="TikTok"
+              >
+                tt
+              </a>
+            </div>
           </div>
 
           {/* Col 2: Luxury Collections */}
@@ -82,10 +111,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
             <ul className="space-y-2 text-xs text-stone-400">
               <li>
                 <button
-                  onClick={() => onSelectCategory('MENSWEAR SHERWANI')}
+                  onClick={() => onSelectCategory('COUTURE')}
                   className="hover:text-white transition-colors cursor-pointer"
                 >
-                  Menswear Sherwani & Prince Coats
+                  Bridal Couture & Heritage Embroidery
                 </button>
               </li>
               <li>
@@ -139,10 +168,19 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 <Mail className="w-3.5 h-3.5 text-amber-400" />
                 <span>shayan.webdev.pk@gmail.com</span>
               </li>
+              <li className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                <span>Rabi Saddar, Adam Jee Road, Rawalpindi, Pakistan</span>
+              </li>
               <li>
-                <button onClick={onOpenLocation} className="hover:text-amber-400 text-left cursor-pointer">
-                  Store Pickup: Gulberg III, Lahore
-                </button>
+                <a
+                  href="https://share.google/ObTR5vvNsyNTTRQAB"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-400 transition-colors"
+                >
+                  View Location on Google Maps
+                </a>
               </li>
             </ul>
           </div>
