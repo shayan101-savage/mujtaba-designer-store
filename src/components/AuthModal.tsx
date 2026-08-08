@@ -68,7 +68,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         const data = await parseJSONSafe(res);
 
         if (!res.ok) {
-          throw new Error((data && data.error) || 'Failed to send verification code.');
+          const errorMessage = data?.error || data?.message || data?._text || `Request failed with status ${res.status}`;
+          throw new Error(errorMessage || 'Failed to send verification code.');
         }
 
         setStep('otp');
@@ -77,7 +78,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           setDebugOtp(data.debugOtp);
         }
     } catch (err: any) {
-      setErrorMsg(err.message || 'Error communicating with authentication server.');
+      const fallbackMessage = err?.message || 'Error communicating with authentication server.';
+      const message = fallbackMessage.includes('fetch') || fallbackMessage.includes('Failed to fetch')
+        ? 'Unable to reach the authentication server. Please try again in a moment.'
+        : fallbackMessage;
+      setErrorMsg(message);
     } finally {
       setLoading(false);
     }
@@ -109,7 +114,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         const data = await parseJSONSafe(res);
 
         if (!res.ok) {
-          throw new Error((data && data.error) || 'Verification failed.');
+          const errorMessage = data?.error || data?.message || data?._text || `Request failed with status ${res.status}`;
+          throw new Error(errorMessage || 'Verification failed.');
         }
 
         setSuccessMsg('Account verified and created successfully!');
@@ -118,7 +124,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           onClose();
         }, 800);
     } catch (err: any) {
-      setErrorMsg(err.message || 'Verification error.');
+      const fallbackMessage = err?.message || 'Verification error.';
+      const message = fallbackMessage.includes('fetch') || fallbackMessage.includes('Failed to fetch')
+        ? 'Unable to reach the authentication server. Please try again in a moment.'
+        : fallbackMessage;
+      setErrorMsg(message);
     } finally {
       setLoading(false);
     }
@@ -150,7 +160,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         const data = await parseJSONSafe(res);
 
         if (!res.ok) {
-          throw new Error((data && data.error) || 'Login failed.');
+          const errorMessage = data?.error || data?.message || data?._text || `Request failed with status ${res.status}`;
+          throw new Error(errorMessage || 'Login failed.');
         }
 
         setSuccessMsg('Login successful! Welcome back.');
@@ -159,7 +170,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           onClose();
         }, 600);
     } catch (err: any) {
-      setErrorMsg(err.message || 'Invalid Gmail or password.');
+      const fallbackMessage = err?.message || 'Invalid Gmail or password.';
+      const message = fallbackMessage.includes('fetch') || fallbackMessage.includes('Failed to fetch')
+        ? 'Unable to reach the authentication server. Please try again in a moment.'
+        : fallbackMessage;
+      setErrorMsg(message);
     } finally {
       setLoading(false);
     }
@@ -333,11 +348,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   </div>
 
                   {/* Debug OTP Convenience Banner */}
-                      {debugOtp && import.meta.env.DEV && (
-                        <div className="p-2.5 bg-stone-100 border border-stone-300 text-[11px] font-mono text-slate-800 flex justify-between items-center">
-                          <span>Generated Code (Preview): <strong className="text-amber-800 font-bold">{debugOtp}</strong></span>
-                        </div>
-                      )}
 
                   <div>
                     <label className="block text-xs font-semibold text-slate-800 uppercase tracking-wider mb-1">

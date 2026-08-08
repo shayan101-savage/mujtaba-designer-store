@@ -13,6 +13,7 @@ import { LocationModal } from './components/LocationModal';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { CMSView } from './components/CMSView';
 import { Footer } from './components/Footer';
+import { AssistantChat } from './components/AssistantChat';
 import { Product, CartItem, User, AdminUser, VideoSettings } from './types';
 import { INITIAL_PRODUCTS } from './data/initialProducts';
 
@@ -397,6 +398,8 @@ export default function App() {
         isOpen={locationModalOpen}
         onClose={() => setLocationModalOpen(false)}
       />
+
+      <AssistantChat />
     </div>
   );
 }

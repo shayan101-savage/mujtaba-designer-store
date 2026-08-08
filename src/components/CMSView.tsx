@@ -17,6 +17,9 @@ import {
   Send,
   ShieldAlert,
   Film,
+  Phone,
+  MapPin,
+  MessageCircle,
 } from 'lucide-react';
 import logoImg from '../assets/images/mujtaba_gold_logo_1786177848393.jpg';
 
@@ -274,6 +277,30 @@ export const CMSView: React.FC<CMSViewProps> = ({
       setActionMessage(`Error: ${err.message}`);
     } finally {
       setSavingProduct(false);
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    if (!confirm('Are you sure you want to delete this order from the CMS?')) return;
+
+    setActionMessage('');
+    try {
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: 'DELETE',
+      });
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const { parseJSONSafe } = await import('../utils/response');
+      const data = await parseJSONSafe(res);
+
+      if (!res.ok) {
+        throw new Error((data && data.error) || 'Failed to delete order.');
+      }
+
+      setActionMessage('Order deleted successfully.');
+      fetchOrders();
+    } catch (err: any) {
+      setActionMessage(`Error: ${err.message}`);
     }
   };
 
@@ -595,15 +622,15 @@ export const CMSView: React.FC<CMSViewProps> = ({
                     <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-stone-200">
                       <div>
                         <span className="text-[10px] font-bold uppercase tracking-widest text-amber-800 block">
-                          ORDER #{order.id.slice(-8).toUpperCase()}
+                          ORDER #{order.orderNumber}
                         </span>
                         <h3 className="font-serif text-lg font-bold text-slate-900 mt-0.5">
-                          {order.customerName}
+                          {order.userName}
                         </h3>
-                        <div className="flex items-center gap-3 text-xs text-stone-600 mt-1">
-                          <span>{order.customerEmail}</span>
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-stone-600 mt-1">
+                          <span>{order.userEmail}</span>
                           <span>•</span>
-                          <span>{order.customerPhone}</span>
+                          <span>{order.phone}</span>
                         </div>
                       </div>
 
@@ -630,13 +657,29 @@ export const CMSView: React.FC<CMSViewProps> = ({
                     </div>
 
                     <div className="py-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">
-                          Delivery Address
-                        </h4>
-                        <p className="text-xs text-slate-800 leading-relaxed bg-white p-3 rounded-xl border border-stone-200">
-                          {order.deliveryAddress}
-                        </p>
+                      <div className="space-y-3">
+                        <div className="rounded-xl border border-stone-200 bg-white p-3">
+                          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">
+                            <MapPin className="w-3.5 h-3.5 text-amber-700" /> Delivery Address
+                          </div>
+                          <p className="text-xs text-slate-800 leading-relaxed">
+                            {order.address}, {order.city}
+                          </p>
+                        </div>
+
+                        <div className="rounded-xl border border-stone-200 bg-white p-3">
+                          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">
+                            <Phone className="w-3.5 h-3.5 text-emerald-700" /> Contact Number
+                          </div>
+                          <p className="text-xs text-slate-800 leading-relaxed">{order.phone}</p>
+                        </div>
+
+                        {order.notes && (
+                          <div className="rounded-xl border border-stone-200 bg-white p-3">
+                            <div className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">Notes</div>
+                            <p className="text-xs text-slate-800 leading-relaxed">{order.notes}</p>
+                          </div>
+                        )}
                       </div>
 
                       <div>
@@ -645,22 +688,30 @@ export const CMSView: React.FC<CMSViewProps> = ({
                         </h4>
                         <div className="space-y-2 bg-white p-3 rounded-xl border border-stone-200 max-h-36 overflow-y-auto">
                           {order.items.map((item, idx) => (
-                            <div key={idx} className="flex justify-between items-center text-xs text-slate-800">
+                            <div key={idx} className="flex justify-between items-center text-xs text-slate-800 gap-2">
                               <span className="font-semibold">{item.title} ({item.size}) x {item.quantity}</span>
-                              <span className="font-bold">Rs. {(item.price * item.quantity).toLocaleString()}</span>
+                              <span className="font-bold whitespace-nowrap">Rs. {(item.price * item.quantity).toLocaleString()}</span>
                             </div>
                           ))}
                         </div>
                       </div>
                     </div>
 
-                    {/* Status Action Buttons */}
-                    <div className="pt-4 border-t border-stone-200 flex items-center justify-between">
+                    <div className="pt-4 border-t border-stone-200 flex flex-wrap items-center justify-between gap-3">
                       <span className="text-[11px] text-stone-500">
                         Placed on: {new Date(order.createdAt).toLocaleString()}
                       </span>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <a
+                          href={`https://wa.me/923318858108?text=${encodeURIComponent(`Assalam o Alaikum Mujtaba Designer, I need help with order ${order.orderNumber}.`)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold tracking-wider uppercase rounded-xl flex items-center gap-1.5 transition-all cursor-pointer"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+                        </a>
+
                         {order.status !== 'Confirmed' && (
                           <button
                             onClick={() => handleUpdateOrderStatus(order.id, 'Confirmed')}
@@ -678,6 +729,13 @@ export const CMSView: React.FC<CMSViewProps> = ({
                             Cancel
                           </button>
                         )}
+
+                        <button
+                          onClick={() => handleDeleteOrder(order.id)}
+                          className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-bold tracking-wider uppercase rounded-xl transition-all cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 inline mr-1" /> Delete
+                        </button>
                       </div>
                     </div>
                   </div>

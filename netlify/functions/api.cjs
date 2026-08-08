@@ -1,11 +1,37 @@
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import nodemailer from 'nodemailer';
 import { INITIAL_PRODUCTS } from '../../src/data.js';
 
-const productsStore = [...INITIAL_PRODUCTS];
-const usersStore = new Map();
-const pendingOTPs = new Map();
-const ordersStore = [];
-let videoSettingsStore = {
+const stateFilePath = process.env.MUJTABA_STATE_FILE || path.join(os.tmpdir(), 'mujtaba-designer-store-state.json');
+
+const loadPersistedState = () => {
+  try {
+    if (fs.existsSync(stateFilePath)) {
+      const raw = fs.readFileSync(stateFilePath, 'utf8');
+      return JSON.parse(raw);
+    }
+  } catch (err) {
+    console.warn('Failed to load persisted state:', err);
+  }
+  return {};
+};
+
+const savePersistedState = (state) => {
+  try {
+    fs.writeFileSync(stateFilePath, JSON.stringify(state, null, 2));
+  } catch (err) {
+    console.warn('Failed to save persisted state:', err);
+  }
+};
+
+const persistedState = loadPersistedState();
+const productsStore = Array.isArray(persistedState.products) ? persistedState.products : [...INITIAL_PRODUCTS];
+const usersStore = new Map(Object.entries(persistedState.users || {}));
+const pendingOTPs = new Map(Object.entries(persistedState.pendingOTPs || {}));
+const ordersStore = Array.isArray(persistedState.orders) ? persistedState.orders : [];
+let videoSettingsStore = persistedState.videoSettings || {
   heroVideoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-in-a-white-dress-walking-41443-large.mp4',
   heroPosterUrl: '/assets/images/mujtaba_video_hero_1786177863771.jpg',
   showcaseVideoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-in-a-white-dress-walking-41443-large.mp4',
@@ -13,6 +39,16 @@ let videoSettingsStore = {
   showcaseTitle: 'PURE LUXURY • DEFINE YOUR STYLE',
   showcaseSubtitle: 'Watch the official Mujtaba Designer 2026 runway showcase featuring our signature emerald embroidered gown & gold-pinstripe bespoke suit.',
   updatedAt: new Date().toISOString()
+};
+
+const persistState = () => {
+  savePersistedState({
+    products: productsStore,
+    users: Object.fromEntries(usersStore),
+    pendingOTPs: Object.fromEntries(pendingOTPs),
+    orders: ordersStore,
+    videoSettings: videoSettingsStore,
+  });
 };
 
 const createTransporter = () => {
@@ -73,6 +109,7 @@ export const handler = async function (event) {
     if (showcaseTitle) videoSettingsStore.showcaseTitle = showcaseTitle.trim();
     if (showcaseSubtitle) videoSettingsStore.showcaseSubtitle = showcaseSubtitle.trim();
     videoSettingsStore.updatedAt = new Date().toISOString();
+    persistState();
     return respond(200, { success: true, message: 'Video settings updated successfully!', settings: videoSettingsStore });
   }
 
@@ -104,6 +141,8 @@ export const handler = async function (event) {
         emailErrorMessage = err.message || 'SMTP failed';
       }
     }
+    persistState();
+
     const response = {
       success: true,
       message: emailSent ? `Verification code dispatched to ${emailKey}` : `Verification code generated for ${emailKey}`,
@@ -136,6 +175,7 @@ export const handler = async function (event) {
     };
     usersStore.set(emailKey, { user, password: pendingData.password });
     pendingOTPs.delete(emailKey);
+    persistState();
     const token = `token_usr_${Date.now()}_${Math.random().toString(36).substring(2)}`;
     return respond(200, { success: true, message: 'Account verified successfully!', user, token });
   }
@@ -186,6 +226,7 @@ export const handler = async function (event) {
       createdAt: new Date().toISOString()
     };
     productsStore.unshift(newProd);
+    persistState();
     return respond(200, { success: true, product: newProd });
   }
 
@@ -201,6 +242,7 @@ export const handler = async function (event) {
       salePrice: body.salePrice ? Number(body.salePrice) : current.salePrice
     });
     productsStore[index] = updated;
+    persistState();
     return respond(200, { success: true, product: updated });
   }
 
@@ -211,6 +253,7 @@ export const handler = async function (event) {
     const remaining = productsStore.filter(p => p.id !== id);
     productsStore.length = 0;
     productsStore.push(...remaining);
+    persistState();
     return respond(200, { success: true, message: 'Product deleted successfully.' });
   }
 
@@ -234,6 +277,7 @@ export const handler = async function (event) {
       createdAt: new Date().toISOString()
     };
     ordersStore.unshift(newOrder);
+    persistState();
     return respond(200, { success: true, message: 'Order placed successfully! Awaiting Admin CMS confirmation.', order: newOrder });
   }
 
@@ -257,6 +301,7 @@ export const handler = async function (event) {
     if (!order) return respond(404, { error: 'Order not found.' });
     order.status = status;
     if (status === 'Confirmed') order.confirmedAt = new Date().toISOString();
+    persistState();
     const transporter = createTransporter();
     let emailSent = false;
     let emailMessage = '';
@@ -277,6 +322,17 @@ export const handler = async function (event) {
       }
     }
     return respond(200, { success: true, message: `Order status updated to ${status}. ${emailMessage}`, order, emailSent });
+  }
+
+  if (segments[0] === 'api' && segments[1] === 'orders' && segments[2] && method === 'DELETE') {
+    const id = segments[2];
+    const beforeLength = ordersStore.length;
+    const filtered = ordersStore.filter(o => o.id !== id);
+    if (filtered.length === beforeLength) return respond(404, { error: 'Order not found.' });
+    ordersStore.length = 0;
+    ordersStore.push(...filtered);
+    persistState();
+    return respond(200, { success: true, message: 'Order deleted successfully.' });
   }
 
   if (path === 'api/health' && method === 'GET') {

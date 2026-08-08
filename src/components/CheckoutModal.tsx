@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, CheckCircle2, ShieldCheck, Truck, Phone, MapPin, RefreshCw, Lock } from 'lucide-react';
 import { CartItem, User, Order } from '../types';
 
@@ -19,10 +19,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 }) => {
   if (!isOpen || !user) return null;
 
-  const [phone, setPhone] = useState('03318858108');
-  const [address, setAddress] = useState('House 14-B, Block H, Gulberg III');
-  const [city, setCity] = useState('Lahore');
-  const [notes, setNotes] = useState('Please handle with care. Require custom stitching inspection.');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'card'>('cod');
 
   const [loading, setLoading] = useState(false);
@@ -33,6 +33,18 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     (sum, item) => sum + (item.product.salePrice || item.product.price) * item.quantity,
     0
   );
+
+  useEffect(() => {
+    if (!isOpen || !user) return;
+
+    setPhone('');
+    setAddress('');
+    setCity('');
+    setNotes('');
+    setPaymentMethod('cod');
+    setErrorMsg('');
+    setPlacedOrder(null);
+  }, [isOpen, user?.gmail]);
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,33 +127,45 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             </div>
 
             <h2 className="font-serif text-2xl font-bold text-slate-900">
-              Order Received! Pending Admin CMS Confirmation
+              Order Received Successfully
             </h2>
 
-            <div className="p-4 bg-amber-50 border border-amber-200 text-left text-xs space-y-1.5 text-amber-950">
-              <p>
-                <strong>Order Number:</strong> #{placedOrder.orderNumber}
-              </p>
-              <p>
-                <strong>Status:</strong> <span className="bg-amber-200 px-2 py-0.5 font-bold uppercase text-[10px]">Pending Confirmation</span>
-              </p>
-              <p>
-                <strong>Customer Gmail:</strong> {placedOrder.userEmail}
-              </p>
-              <p>
-                <strong>Total Amount:</strong> Rs. {placedOrder.totalAmount.toLocaleString()}
-              </p>
-              <p className="text-stone-600 pt-1">
-                Your order has been logged into our Admin CMS. Once confirmed by our boutique team, an automated dispatch email will be sent to <strong>{placedOrder.userEmail}</strong>.
+            <div className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 via-white to-stone-50 p-4 text-left text-sm space-y-2 text-amber-950 shadow-sm">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-stone-500">Order Number</span>
+                <span className="font-bold text-slate-900">#{placedOrder.orderNumber}</span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-stone-500">Status</span>
+                <span className="bg-amber-200 px-2.5 py-1 font-bold uppercase text-[10px] rounded-full">Pending Review</span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-stone-500">Customer</span>
+                <span className="font-medium text-slate-800">{placedOrder.userEmail}</span>
+              </div>
+              <div className="flex items-center justify-between gap-3 border-t border-amber-100 pt-2 mt-2">
+                <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-stone-500">Total</span>
+                <span className="font-bold text-amber-900">Rs. {placedOrder.totalAmount.toLocaleString()}</span>
+              </div>
+              <p className="text-stone-600 pt-2 text-xs leading-5">
+                Your order has been received and will be reviewed by our team. You will receive a confirmation update shortly on WhatsApp and email.
               </p>
             </div>
 
-            <div className="pt-4 flex justify-center gap-4">
+            <div className="pt-2 flex flex-col sm:flex-row justify-center gap-3">
+              <a
+                href="https://wa.me/923318858108?text=Assalam%20o%20Alaikum%20Mujtaba%20Designer%2C%20I%20would%20like%20to%20confirm%20my%20order%20and%20receive%20assistance."
+                target="_blank"
+                rel="noreferrer"
+                className="px-6 py-2.5 bg-emerald-600 text-white font-bold text-xs uppercase tracking-[0.2em] hover:bg-emerald-700 rounded-full text-center"
+              >
+                Confirm Order on WhatsApp
+              </a>
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 bg-slate-900 text-white font-bold text-xs uppercase tracking-widest hover:bg-amber-800"
+                className="px-6 py-2.5 bg-slate-900 text-white font-bold text-xs uppercase tracking-[0.2em] hover:bg-amber-800 rounded-full"
               >
-                Return to Store
+                Continue Shopping
               </button>
             </div>
           </div>
@@ -180,6 +204,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     type="tel"
                     required
                     value={phone}
+                    placeholder="03XX XXXXXXXX"
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full px-3 py-2 text-xs border border-stone-300 focus:outline-none focus:border-amber-800"
                   />
@@ -193,6 +218,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     type="text"
                     required
                     value={city}
+                    placeholder="Lahore"
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full px-3 py-2 text-xs border border-stone-300 focus:outline-none focus:border-amber-800"
                   />
@@ -207,6 +233,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   rows={2}
                   required
                   value={address}
+                  placeholder="House number, street, sector, city"
                   onChange={(e) => setAddress(e.target.value)}
                   className="w-full px-3 py-2 text-xs border border-stone-300 focus:outline-none focus:border-amber-800"
                 />
@@ -219,6 +246,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <input
                   type="text"
                   value={notes}
+                  placeholder="Optional: custom stitching, gift wrapping, size adjustment"
                   onChange={(e) => setNotes(e.target.value)}
                   className="w-full px-3 py-2 text-xs border border-stone-300 focus:outline-none focus:border-amber-800"
                 />
@@ -254,7 +282,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             </div>
 
             {/* Order Summary Box */}
-            <div className="p-4 bg-stone-50 border border-stone-200 space-y-1 text-xs">
+            <div className="p-4 bg-stone-50 border border-stone-200 space-y-1 text-xs rounded-xl">
               <div className="flex justify-between">
                 <span>Total Items:</span>
                 <span className="font-semibold">{cart.reduce((a, b) => a + b.quantity, 0)}</span>
@@ -268,9 +296,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-slate-900 hover:bg-amber-800 text-white font-bold text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3.5 bg-slate-900 hover:bg-amber-800 text-white font-bold text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 cursor-pointer rounded-full shadow-sm"
             >
-              {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Confirm Order (Submit to CMS)'}
+              {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Confirm Order'}
             </button>
           </form>
         )}

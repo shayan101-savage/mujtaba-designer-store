@@ -404,6 +404,25 @@ app.get('/api/orders/all', (req, res) => {
   return res.json({ orders: ordersStore });
 });
 
+// Delete Order (Admin CMS)
+app.delete('/api/orders/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const beforeLength = ordersStore.length;
+    const filtered = ordersStore.filter(order => order.id !== id);
+
+    if (filtered.length === beforeLength) {
+      return res.status(404).json({ error: 'Order not found.' });
+    }
+
+    ordersStore.length = 0;
+    ordersStore.push(...filtered);
+    return res.json({ success: true, message: 'Order deleted successfully.' });
+  } catch (err: any) {
+    return res.status(500).json({ error: 'Failed to delete order.' });
+  }
+});
+
 // Update Order Status (Admin CMS: Confirm / Cancel)
 app.put('/api/orders/:id/status', async (req, res) => {
   try {
