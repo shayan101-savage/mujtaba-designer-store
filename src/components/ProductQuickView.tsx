@@ -54,6 +54,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
             <img
               src={selectedImage || product.images[0]}
               alt={product.title}
+              loading="lazy"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover object-center"
             />
@@ -70,7 +71,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
                     selectedImage === img ? 'border-amber-800 scale-105' : 'border-stone-200 opacity-70'
                   }`}
                 >
-                  <img src={img} alt="Thumbnail" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                  <img src={img} loading="lazy" alt="Thumbnail" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

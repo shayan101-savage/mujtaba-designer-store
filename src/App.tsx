@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { LoadingScreen } from './components/LoadingScreen';
 import { Header } from './components/Header';
-import { HeroSection } from './components/HeroSection';
-import { VideoShowcaseSection } from './components/VideoShowcaseSection';
+const HeroSection = React.lazy(() => import('./components/HeroSection').then((m) => ({ default: m.HeroSection })));
+const VideoShowcaseSection = React.lazy(() => import('./components/VideoShowcaseSection').then((m) => ({ default: m.VideoShowcaseSection })));
 import { ProductCard } from './components/ProductCard';
 import { ProductQuickView } from './components/ProductQuickView';
 import { AuthModal } from './components/AuthModal';
@@ -65,6 +65,31 @@ export default function App() {
 
   // Video Settings State
   const [videoSettings, setVideoSettings] = useState<VideoSettings | null>(null);
+
+  const WOMEN_ONLY_CATEGORY_FILTER = /(men|menswear|men's|groom|gentlemens?)/i;
+  const womenProducts = products.filter((product) => !WOMEN_ONLY_CATEGORY_FILTER.test(product.category));
+
+  const categoryLabels: Record<string, string> = {
+    'ALL COLLECTIONS': 'HOME',
+    'NEW ARRIVALS': 'NEW ARRIVALS',
+    'COUTURE': "WOMEN'S FABRICS",
+    'LUXURY LAWN': 'LAWN',
+    'UNSTITCHED': 'UNSTITCHED',
+    'STITCHED': 'STITCHED',
+    'FESTIVE PRET': 'WEDDING / FORMAL',
+    'WINTER': 'WINTER COLLECTION',
+    'SALE': 'SALE',
+  };
+
+  const availableCategories = Array.from(
+    new Set(womenProducts.map((product) => product.category.toUpperCase()))
+  ) as string[];
+  const menuCategories = [
+    'ALL COLLECTIONS',
+    'NEW ARRIVALS',
+    ...availableCategories.filter((cat: string) => ['COUTURE', 'LUXURY LAWN', 'UNSTITCHED', 'STITCHED', 'FESTIVE PRET', 'WINTER'].includes(cat)),
+    'SALE',
+  ].filter((value, index, self) => self.indexOf(value) === index) as string[];
 
   const fetchVideoSettings = async () => {
     try {
@@ -183,17 +208,18 @@ export default function App() {
     }
   };
 
-  // Filter Products based on Category & Search
-  const filteredProducts = products.filter((p) => {
-    const matchesCategory =
-      activeCategory === 'ALL COLLECTIONS' ||
-      p.category.toUpperCase() === activeCategory.toUpperCase();
-
+  const filteredProducts = womenProducts.filter((product) => {
     const matchesSearch =
       !searchQuery ||
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.category.toLowerCase().includes(searchQuery.toLowerCase());
+      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      activeCategory === 'ALL COLLECTIONS' ||
+      activeCategory === 'NEW ARRIVALS' ||
+      (activeCategory === 'SALE' && product.salePrice) ||
+      product.category.toUpperCase() === activeCategory.toUpperCase();
 
     return matchesCategory && matchesSearch;
   });
@@ -230,6 +256,7 @@ export default function App() {
         cartCount={cart.reduce((a, b) => a + b.quantity, 0)}
         wishlistCount={wishlist.length}
         activeCategory={activeCategory}
+        categories={menuCategories.map((key) => ({ key, label: categoryLabels[key] || key }))}
         onSelectCategory={(cat) => {
           setActiveCategory(cat);
           setSearchQuery('');
@@ -243,23 +270,25 @@ export default function App() {
         onSearchChange={setSearchQuery}
       />
 
-      {/* Hero Section with Video */}
-      <HeroSection
-        videoSettings={videoSettings}
-        onExploreClick={(cat) => {
-          if (cat) setActiveCategory(cat);
-          const el = document.getElementById('catalog-section');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }}
-        onOpenLocation={() => setLocationModalOpen(true)}
-      />
+      {/* Hero Section with Video (lazy-loaded) */}
+      <Suspense fallback={<div className="min-h-[420px] bg-white" />}>
+        <HeroSection
+          videoSettings={videoSettings}
+          onExploreClick={(cat) => {
+            if (cat) setActiveCategory(cat);
+            const el = document.getElementById('catalog-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onOpenLocation={() => setLocationModalOpen(true)}
+        />
 
-      {/* Grand Video Showcase Section */}
-      <VideoShowcaseSection
-        videoSettings={videoSettings}
-        onQuickView={(p) => setQuickViewProduct(p)}
-        onAddToCart={(p, size) => handleAddToCart(p, size)}
-      />
+        {/* Grand Video Showcase Section (lazy-loaded) */}
+        <VideoShowcaseSection
+          videoSettings={videoSettings}
+          onQuickView={(p) => setQuickViewProduct(p)}
+          onAddToCart={(p, size) => handleAddToCart(p, size)}
+        />
+      </Suspense>
 
       {/* Main E-Commerce Catalog Section */}
       <main id="catalog-section" className="flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-16 sm:py-24 w-full">

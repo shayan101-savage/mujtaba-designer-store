@@ -63,6 +63,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
         loop
         muted={isMuted}
         playsInline
+        preload="metadata"
         poster={heroPoster}
         className="absolute inset-0 w-full h-full object-cover object-center scale-105 filter brightness-100 transition-all"
       >
@@ -74,6 +75,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
         <img
           src={heroPoster}
           alt="Mujtaba Designer Video Hero Background"
+          loading="lazy"
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
         />

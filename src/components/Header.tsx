@@ -16,6 +16,7 @@ interface HeaderProps {
   onOpenLocation: () => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  categories: { key: string; label: string }[];
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -31,17 +32,16 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenLocation,
   searchQuery,
   onSearchChange,
+  categories,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
 
-  const categories = [
-    'ALL COLLECTIONS',
-    'MENSWEAR SHERWANI',
-    'COUTURE',
-    'LUXURY LAWN',
-    'VELVET EDITION',
-    'FESTIVE PRET',
+  const navCategories = [
+    { key: 'ALL COLLECTIONS', label: 'HOME' },
+    { key: 'NEW ARRIVALS', label: 'NEW ARRIVALS' },
+    ...categories,
+    { key: 'SALE', label: 'SALE' },
   ];
 
   return (
@@ -212,19 +212,19 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Desktop Category Navigation Bar - Scaled */}
       <nav className="hidden lg:block bg-stone-50/80 border-t border-stone-200/80">
         <div className="max-w-[1600px] mx-auto px-6 flex items-center justify-center gap-10 py-3">
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat;
+          {navCategories.map((item) => {
+            const isActive = activeCategory === item.key;
             return (
               <button
-                key={cat}
-                onClick={() => onSelectCategory(cat)}
+                key={item.key}
+                onClick={() => onSelectCategory(item.key)}
                 className={`text-xs font-bold tracking-[0.25em] uppercase transition-all py-1.5 border-b-2 cursor-pointer ${
                   isActive
                     ? 'border-amber-800 text-amber-900 font-extrabold'
                     : 'border-transparent text-slate-700 hover:text-slate-950 hover:border-slate-400'
                 }`}
               >
-                {cat}
+                {item.label}
               </button>
             );
           })}
@@ -243,18 +243,18 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="text-xs font-bold tracking-[0.3em] text-slate-400 uppercase mb-3">
             LUXURY COLLECTIONS
           </div>
-          {categories.map((cat) => (
+          {navCategories.map((item) => (
             <button
-              key={cat}
+              key={item.key}
               onClick={() => {
-                onSelectCategory(cat);
+                onSelectCategory(item.key);
                 setMobileMenuOpen(false);
               }}
               className={`block w-full text-left py-3 text-sm font-bold uppercase tracking-[0.2em] border-b border-stone-100 ${
-                activeCategory === cat ? 'text-amber-800 font-extrabold bg-amber-50/50 px-3 rounded-lg' : 'text-slate-800'
+                activeCategory === item.key ? 'text-amber-800 font-extrabold bg-amber-50/50 px-3 rounded-lg' : 'text-slate-800'
               }`}
             >
-              {cat}
+              {item.label}
             </button>
           ))}
           <div className="pt-4 space-y-3">

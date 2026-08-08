@@ -118,6 +118,7 @@ export const VideoShowcaseSection: React.FC<VideoShowcaseSectionProps> = ({
             loop
             muted={isMuted}
             playsInline
+            preload="metadata"
             poster={showcasePoster}
             className="w-full aspect-[16/9] md:aspect-[21/9] object-cover object-center filter brightness-100 transition-all duration-500"
           >
@@ -209,6 +210,7 @@ export const VideoShowcaseSection: React.FC<VideoShowcaseSectionProps> = ({
               <img
                 src={showcasePoster}
                 alt="Emerald Green Embroidered Couture Gown"
+                loading="lazy"
                 className="w-full h-full object-cover object-top"
               />
               <span className="absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-md">

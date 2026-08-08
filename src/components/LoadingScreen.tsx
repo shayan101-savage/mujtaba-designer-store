@@ -42,6 +42,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             <img
               src={logoImg}
               alt="Mujtaba Designer Logo"
+              loading="lazy"
               className="w-full h-full object-cover rounded-full"
             />
             <div className="absolute inset-0 rounded-full border border-amber-500/30 animate-ping opacity-20" />

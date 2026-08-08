@@ -102,6 +102,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <img
                       src={item.product.images[0]}
                       alt={item.product.title}
+                      loading="lazy"
                       referrerPolicy="no-referrer"
                       className="w-20 h-24 object-cover flex-shrink-0 bg-stone-200"
                     />

@@ -31,6 +31,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 <img
                   src={logoImg}
                   alt="Mujtaba Designer Logo"
+                  loading="lazy"
                   className="w-full h-full object-cover rounded-full"
                 />
               </div>

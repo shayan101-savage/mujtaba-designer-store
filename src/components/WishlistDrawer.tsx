@@ -91,6 +91,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                       <img
                         src={product.images[0]}
                         alt={product.title}
+                        loading="lazy"
                         className="w-full h-full object-cover object-top"
                       />
                     </div>

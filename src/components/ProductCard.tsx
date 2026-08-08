@@ -47,6 +47,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <img
           src={mainImage}
           alt={product.title}
+          loading="lazy"
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
         />
@@ -56,6 +57,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <img
             src={secondImage}
             alt={`${product.title} view 2`}
+            loading="lazy"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover object-top opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           />
