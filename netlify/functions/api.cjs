@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const { INITIAL_PRODUCTS } = require('./data');
+const { INITIAL_PRODUCTS } = require('../../src/data');
 
 const productsStore = [...INITIAL_PRODUCTS];
 const usersStore = new Map();
