@@ -62,22 +62,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           body: JSON.stringify({ gmail, firstName, lastName, password }),
         });
 
-        const contentType = res.headers.get('content-type') || '';
-        let data: any = null;
-        if (contentType.includes('application/json')) {
-          data = await res.json();
-        } else {
-          const text = await res.text();
-          throw new Error(`Unexpected non-JSON response: ${text}`);
-        }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const { parseJSONSafe } = await import('../utils/response');
+        const data = await parseJSONSafe(res);
 
         if (!res.ok) {
-          throw new Error(data?.error || 'Failed to send verification code.');
+          throw new Error((data && data.error) || 'Failed to send verification code.');
         }
 
         setStep('otp');
-        setSuccessMsg(data.message || `Verification code sent to ${gmail}`);
-        if (data.debugOtp) {
+        setSuccessMsg((data && data.message) || `Verification code sent to ${gmail}`);
+        if (data && data.debugOtp) {
           setDebugOtp(data.debugOtp);
         }
     } catch (err: any) {
@@ -107,17 +103,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           body: JSON.stringify({ gmail, code: otpCode }),
         });
 
-        const contentType = res.headers.get('content-type') || '';
-        let data: any = null;
-        if (contentType.includes('application/json')) {
-          data = await res.json();
-        } else {
-          const text = await res.text();
-          throw new Error(`Unexpected non-JSON response: ${text}`);
-        }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const { parseJSONSafe } = await import('../utils/response');
+        const data = await parseJSONSafe(res);
 
         if (!res.ok) {
-          throw new Error(data?.error || 'Verification failed.');
+          throw new Error((data && data.error) || 'Verification failed.');
         }
 
         setSuccessMsg('Account verified and created successfully!');
@@ -152,17 +144,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           body: JSON.stringify({ gmail, password }),
         });
 
-        const contentType = res.headers.get('content-type') || '';
-        let data: any = null;
-        if (contentType.includes('application/json')) {
-          data = await res.json();
-        } else {
-          const text = await res.text();
-          throw new Error(`Unexpected non-JSON response: ${text}`);
-        }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const { parseJSONSafe } = await import('../utils/response');
+        const data = await parseJSONSafe(res);
 
         if (!res.ok) {
-          throw new Error(data.error || 'Login failed.');
+          throw new Error((data && data.error) || 'Login failed.');
         }
 
         setSuccessMsg('Login successful! Welcome back.');

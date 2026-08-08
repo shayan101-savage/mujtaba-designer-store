@@ -24,8 +24,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
     setLoading(true);
     try {
       const res = await fetch(`/api/orders/my-orders?email=${encodeURIComponent(user.gmail)}`);
-      const data = await res.json();
-      if (res.ok) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const { parseJSONSafe } = await import('../utils/response');
+      const data = await parseJSONSafe(res);
+      if (res.ok && data) {
         setOrders(data.orders || []);
       }
     } catch (err) {

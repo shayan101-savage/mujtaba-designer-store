@@ -73,14 +73,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const { parseJSONSafe } = await import('../utils/response');
+      const data = await parseJSONSafe(res);
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to place order.');
+        throw new Error((data && data.error) || 'Failed to place order.');
       }
 
-      setPlacedOrder(data.order);
-      onOrderPlaced(data.order);
+      setPlacedOrder(data?.order);
+      if (data?.order) onOrderPlaced(data.order);
     } catch (err: any) {
       setErrorMsg(err.message || 'Error processing order.');
     } finally {

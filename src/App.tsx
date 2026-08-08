@@ -68,8 +68,12 @@ export default function App() {
   const fetchVideoSettings = async () => {
     try {
       const res = await fetch('/api/settings/video');
-      const data = await res.json();
-      if (res.ok) {
+      // safe-parse
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const { parseJSONSafe } = await import('./utils/response');
+      const data = await parseJSONSafe(res);
+      if (res.ok && data) {
         setVideoSettings(data);
       }
     } catch (e) {
@@ -118,8 +122,11 @@ export default function App() {
   const fetchProducts = async () => {
     try {
       const res = await fetch('/api/products');
-      const data = await res.json();
-      if (res.ok && data.products && data.products.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const { parseJSONSafe } = await import('./utils/response');
+      const data = await parseJSONSafe(res);
+      if (res.ok && data && data.products && data.products.length > 0) {
         setProducts(data.products);
       }
     } catch (err) {
