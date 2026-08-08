@@ -56,11 +56,12 @@ app.put('/api/settings/video', (req, res) => {
 
 // Configure Nodemailer Transporter
 const createTransporter = () => {
-  const emailUser = process.env.EMAIL_USER || 'shayan.webdev.pk@gmail.com';
-  const emailPass = process.env.EMAIL_PASS || 'bwgijtllqorasjqw';
+  const emailUser = process.env.EMAIL_USER;
+  const emailPass = process.env.EMAIL_PASS;
 
+  // Only create transporter when both env vars are provided. Do not fall back to hardcoded defaults.
   if (!emailUser || !emailPass) {
-    console.warn('Nodemailer credentials missing. Email dispatches will be simulated.');
+    console.warn('Nodemailer credentials not provided via environment variables. Email dispatches will be simulated.');
     return null;
   }
 
@@ -138,15 +139,9 @@ app.post('/api/auth/send-otp', async (req, res) => {
       }
     }
 
-    // If transporter existed but sending failed, return an error so frontend can surface it.
+    // If transporter existed but sending failed, log warning and still return generated OTP
     if (transporter && !emailSent) {
       console.warn(`[OTP EMAIL FAILED] ${emailKey} - ${emailErrorMessage}`);
-      return res.status(500).json({
-        error: 'Failed to send verification code via SMTP.',
-        emailErrorMessage: emailErrorMessage || 'SMTP send failed',
-        // include debugOtp for developer convenience when running locally
-        debugOtp: otpCode
-      });
     }
 
     return res.json({
@@ -249,8 +244,11 @@ app.post('/api/auth/login', (req, res) => {
 app.post('/api/auth/admin-login', (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(`[ADMIN LOGIN ATTEMPT] email=${email}`);
     const adminEmail = process.env.ADMIN_EMAIL || 'admin';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+
+    console.log(`[ADMIN CREDENTIALS] expected=${adminEmail} / ${adminPassword ? '***' : 'not-set'}`);
 
     if (email === adminEmail && password === adminPassword) {
       const token = `admin_token_${Date.now()}`;
