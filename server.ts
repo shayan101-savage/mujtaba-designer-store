@@ -138,6 +138,17 @@ app.post('/api/auth/send-otp', async (req, res) => {
       }
     }
 
+    // If transporter existed but sending failed, return an error so frontend can surface it.
+    if (transporter && !emailSent) {
+      console.warn(`[OTP EMAIL FAILED] ${emailKey} - ${emailErrorMessage}`);
+      return res.status(500).json({
+        error: 'Failed to send verification code via SMTP.',
+        emailErrorMessage: emailErrorMessage || 'SMTP send failed',
+        // include debugOtp for developer convenience when running locally
+        debugOtp: otpCode
+      });
+    }
+
     return res.json({
       success: true,
       message: emailSent
