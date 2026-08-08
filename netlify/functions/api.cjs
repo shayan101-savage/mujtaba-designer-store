@@ -1,8 +1,8 @@
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import nodemailer from 'nodemailer';
-import { INITIAL_PRODUCTS } from '../../src/data.js';
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const nodemailer = require('nodemailer');
+const { INITIAL_PRODUCTS } = require('../../src/data.js');
 
 const stateFilePath = process.env.MUJTABA_STATE_FILE || path.join(os.tmpdir(), 'mujtaba-designer-store-state.json');
 
@@ -86,7 +86,7 @@ const parseBody = (event) => {
   }
 };
 
-export const handler = async function (event) {
+const handler = async function (event) {
   const url = new URL(event.rawUrl || event.path, 'https://example.com');
   const path = url.pathname.replace(/\/+$|^\/+/, '');
   const segments = path.split('/');
@@ -341,3 +341,5 @@ export const handler = async function (event) {
 
   return respond(404, { error: 'Route not found.' });
 };
+
+module.exports = { handler };
