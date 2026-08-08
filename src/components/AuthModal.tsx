@@ -56,23 +56,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setLoading(true);
 
     try {
-      const res = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gmail, firstName, lastName, password }),
-      });
+        const res = await fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gmail, firstName, lastName, password }),
+        });
 
-      const data = await res.json();
+        const contentType = res.headers.get('content-type') || '';
+        let data: any = null;
+        if (contentType.includes('application/json')) {
+          data = await res.json();
+        } else {
+          const text = await res.text();
+          throw new Error(`Unexpected non-JSON response: ${text}`);
+        }
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to send verification code.');
-      }
+        if (!res.ok) {
+          throw new Error(data?.error || 'Failed to send verification code.');
+        }
 
-      setStep('otp');
-      setSuccessMsg(data.message || `Verification code sent to ${gmail}`);
-      if (data.debugOtp) {
-        setDebugOtp(data.debugOtp);
-      }
+        setStep('otp');
+        setSuccessMsg(data.message || `Verification code sent to ${gmail}`);
+        if (data.debugOtp) {
+          setDebugOtp(data.debugOtp);
+        }
     } catch (err: any) {
       setErrorMsg(err.message || 'Error communicating with authentication server.');
     } finally {
@@ -94,23 +101,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setLoading(true);
 
     try {
-      const res = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gmail, code: otpCode }),
-      });
+        const res = await fetch('/api/auth/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gmail, code: otpCode }),
+        });
 
-      const data = await res.json();
+        const contentType = res.headers.get('content-type') || '';
+        let data: any = null;
+        if (contentType.includes('application/json')) {
+          data = await res.json();
+        } else {
+          const text = await res.text();
+          throw new Error(`Unexpected non-JSON response: ${text}`);
+        }
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Verification failed.');
-      }
+        if (!res.ok) {
+          throw new Error(data?.error || 'Verification failed.');
+        }
 
-      setSuccessMsg('Account verified and created successfully!');
-      setTimeout(() => {
-        onSuccessUser(data.user, data.token);
-        onClose();
-      }, 800);
+        setSuccessMsg('Account verified and created successfully!');
+        setTimeout(() => {
+          onSuccessUser(data.user, data.token);
+          onClose();
+        }, 800);
     } catch (err: any) {
       setErrorMsg(err.message || 'Verification error.');
     } finally {
@@ -132,23 +146,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setLoading(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gmail, password }),
-      });
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gmail, password }),
+        });
 
-      const data = await res.json();
+        const contentType = res.headers.get('content-type') || '';
+        let data: any = null;
+        if (contentType.includes('application/json')) {
+          data = await res.json();
+        } else {
+          const text = await res.text();
+          throw new Error(`Unexpected non-JSON response: ${text}`);
+        }
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Login failed.');
-      }
+        if (!res.ok) {
+          throw new Error(data.error || 'Login failed.');
+        }
 
-      setSuccessMsg('Login successful! Welcome back.');
-      setTimeout(() => {
-        onSuccessUser(data.user, data.token);
-        onClose();
-      }, 600);
+        setSuccessMsg('Login successful! Welcome back.');
+        setTimeout(() => {
+          onSuccessUser(data.user, data.token);
+          onClose();
+        }, 600);
     } catch (err: any) {
       setErrorMsg(err.message || 'Invalid Gmail or password.');
     } finally {

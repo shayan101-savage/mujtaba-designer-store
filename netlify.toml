@@ -1,0 +1,14 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/cms"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/cms/*"
+  to = "/index.html"
+  status = 200
+  force = true
