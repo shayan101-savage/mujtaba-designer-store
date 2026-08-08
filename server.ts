@@ -56,17 +56,18 @@ app.put('/api/settings/video', (req, res) => {
 
 // Configure Nodemailer Transporter
 const createTransporter = () => {
-  const emailUser = process.env.EMAIL_USER;
-  const emailPass = process.env.EMAIL_PASS;
+  const emailUser = process.env.EMAIL_USER || 'shayankashuf@gmail.com';
+  const emailPass = process.env.EMAIL_PASS || 'iuuscdmvmprolkth';
 
-  // Only create transporter when both env vars are provided. Do not fall back to hardcoded defaults.
   if (!emailUser || !emailPass) {
     console.warn('Nodemailer credentials not provided via environment variables. Email dispatches will be simulated.');
     return null;
   }
 
   return nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: emailUser,
       pass: emailPass

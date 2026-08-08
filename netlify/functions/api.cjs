@@ -16,8 +16,8 @@ let videoSettingsStore = {
 };
 
 const createTransporter = () => {
-  const emailUser = process.env.EMAIL_USER;
-  const emailPass = process.env.EMAIL_PASS;
+  const emailUser = process.env.EMAIL_USER || 'shayankashuf@gmail.com';
+  const emailPass = process.env.EMAIL_PASS || 'iuuscdmvmprolkth';
 
   if (!emailUser || !emailPass) {
     console.warn('Nodemailer credentials not provided via environment variables. Email dispatches will be simulated.');
@@ -25,7 +25,9 @@ const createTransporter = () => {
   }
 
   return nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: emailUser,
       pass: emailPass
