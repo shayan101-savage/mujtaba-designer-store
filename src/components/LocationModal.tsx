@@ -11,16 +11,16 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md">
-      <div className="relative w-full max-w-3xl bg-white/90 backdrop-blur-2xl rounded-2xl shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border border-white/50 overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="relative w-full max-w-3xl bg-white backdrop-blur-2xl rounded-2xl shadow-[0_32px_64px_-12px_rgba(0,0,0,0.08)] border border-stone-200 overflow-hidden max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="bg-slate-950/90 text-white p-5 flex justify-between items-center border-b border-slate-800/80">
+        <div className="bg-white text-slate-950 p-5 flex justify-between items-center border-b border-stone-200">
           <div>
-            <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-amber-400 block mb-0.5">
+            <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-slate-500 block mb-0.5">
               MUJTABA DESIGNER
             </span>
             <h3 className="font-serif text-xl font-bold tracking-wide">Boutique Locations & Store Pickup</h3>
           </div>
-          <button onClick={onClose} className="p-1.5 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors cursor-pointer">
+          <button onClick={onClose} className="p-1.5 bg-stone-100 hover:bg-slate-200 text-slate-950 rounded-full transition-colors cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -38,16 +38,16 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
-            <div className="p-3 bg-slate-900 text-white text-xs flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-3">
+            <div className="p-3 bg-white text-slate-950 text-xs flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-3 border-t border-stone-200">
               <span className="font-medium flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-amber-400" />
+                <MapPin className="w-4 h-4 text-slate-900" />
                 Rabi Saddar, Adam Jee Road, Rawalpindi, Pakistan
               </span>
               <a
-                href="https://share.google/ObTR5vvNsyNTTRQAB"
+                href="https://maps.google.com/?q=Rabi+Saddar,+Adam+Jee+Road,+Rawalpindi,+Pakistan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-amber-800 hover:bg-amber-900 text-white text-[10px] font-bold px-3 py-1 uppercase tracking-wider flex items-center gap-1"
+                className="bg-slate-950 hover:bg-slate-800 text-white text-[10px] font-bold px-3 py-1 uppercase tracking-wider flex items-center gap-1"
               >
                 View Location on Google Maps <ExternalLink className="w-3 h-3" />
               </a>

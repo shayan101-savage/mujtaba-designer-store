@@ -129,14 +129,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
       </div>
 
       {/* Currently Viewing Frosted Badge (Bottom Right) */}
-      <div className="hidden sm:flex absolute bottom-10 right-10 z-20 bg-slate-950/85 backdrop-blur-xl p-4 px-6 border border-amber-400/40 shadow-2xl flex-col gap-1 rounded-2xl text-white max-w-xs">
-        <span className="text-[10px] tracking-[0.3em] text-amber-400 uppercase font-bold flex items-center gap-1.5">
-          <Film className="w-3.5 h-3.5 text-amber-300 animate-pulse" /> PLAYING OFFICIAL FILM
+      <div className="hidden sm:flex absolute bottom-10 right-10 z-20 bg-white/95 backdrop-blur-xl p-4 px-6 border border-stone-200 shadow-2xl flex-col gap-1 rounded-2xl text-slate-950 max-w-xs">
+        <span className="text-[10px] tracking-[0.3em] text-slate-600 uppercase font-bold flex items-center gap-1.5">
+          <Film className="w-3.5 h-3.5 text-slate-500 animate-pulse" /> PLAYING OFFICIAL FILM
         </span>
-        <span className="text-sm font-serif font-bold tracking-wide text-stone-100">
-          Pure Luxury • Emerald Gown & Gold Pinstripe Suit
+        <span className="text-sm font-serif font-bold tracking-wide text-slate-950">
+          Pure Luxury • Emerald Gown & Royal Couture
         </span>
-        <span className="text-[10px] text-stone-400 uppercase tracking-widest mt-0.5">
+        <span className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">
           "Define Your Own Style"
         </span>
       </div>
@@ -200,24 +200,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
         >
           <button
             onClick={() => onExploreClick('COUTURE')}
-            className="px-10 py-4 sm:py-5 bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-[0.3em] uppercase transition-all shadow-md hover:scale-105 flex items-center gap-3 group cursor-pointer border border-slate-900 rounded-xl"
+            className="px-10 py-4 sm:py-5 bg-white border border-stone-200 hover:bg-stone-100 text-slate-950 font-bold text-xs sm:text-sm tracking-[0.3em] uppercase transition-all shadow-md hover:scale-105 flex items-center gap-3 group cursor-pointer rounded-xl"
           >
             BRIDAL COUTURE
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-5 h-5 text-slate-950 group-hover:translate-x-1 transition-transform" />
           </button>
 
           <button
             onClick={() => onExploreClick('COUTURE')}
-            className="px-8 py-4 sm:py-5 bg-slate-900 hover:bg-slate-800 text-white border border-slate-900 font-bold text-xs sm:text-sm tracking-[0.3em] uppercase rounded-xl transition-all cursor-pointer shadow-md hover:scale-105"
+            className="px-8 py-4 sm:py-5 bg-white/95 hover:bg-stone-100 text-slate-950 border border-stone-200 font-bold text-xs sm:text-sm tracking-[0.3em] uppercase rounded-xl transition-all cursor-pointer shadow-md hover:scale-105"
           >
             EXPLORE COUTURE
           </button>
 
           <button
             onClick={onOpenLocation}
-            className="px-8 py-4 sm:py-5 bg-white hover:bg-stone-100 text-slate-950 border border-white font-bold text-xs sm:text-sm tracking-[0.25em] uppercase rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-xl hover:scale-105"
+            className="px-8 py-4 sm:py-5 bg-white hover:bg-stone-100 text-slate-950 border border-stone-200 font-bold text-xs sm:text-sm tracking-[0.25em] uppercase rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-xl hover:scale-105"
           >
-            <MapPin className="w-4 h-4 text-amber-700" />
+            <MapPin className="w-4 h-4 text-slate-900" />
             STORE PICKUP
           </button>
         </motion.div>

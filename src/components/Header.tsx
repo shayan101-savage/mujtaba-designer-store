@@ -46,26 +46,26 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-200/80 shadow-sm transition-all">
-      {/* Top Announcement Bar - Scaled & Clear */}
-      <div className="bg-slate-950 text-stone-200 text-xs font-semibold tracking-[0.25em] uppercase py-2.5 px-6 sm:px-10 flex flex-wrap justify-between items-center border-b border-slate-800">
+      {/* Top Announcement Bar - White Luxury */}
+      <div className="bg-white text-slate-900 text-xs font-semibold tracking-[0.25em] uppercase py-2.5 px-6 sm:px-10 flex flex-wrap justify-between items-center border-b border-stone-200">
         <div className="flex items-center gap-2.5">
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="inline-block w-2.5 h-2.5 rounded-full bg-slate-900 animate-pulse" />
           <span>Complimentary Worldwide Express Shipping on Orders over Rs. 100,000</span>
         </div>
-        <div className="hidden md:flex items-center gap-8 text-xs text-stone-300">
+        <div className="hidden md:flex items-center gap-8 text-xs text-slate-700">
           <a
             href="https://wa.me/923318858108"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-amber-400 transition-colors flex items-center gap-2"
+            className="hover:text-slate-950 transition-colors flex items-center gap-2"
           >
-            <Phone className="w-3.5 h-3.5 text-emerald-400" /> WhatsApp & Call: 03318858108
+            <Phone className="w-3.5 h-3.5 text-slate-900" /> WhatsApp & Call: 03318858108
           </a>
           <button
             onClick={onOpenLocation}
-            className="hover:text-amber-400 transition-colors flex items-center gap-2 cursor-pointer"
+            className="hover:text-slate-950 transition-colors flex items-center gap-2 cursor-pointer"
           >
-            <MapPin className="w-3.5 h-3.5 text-amber-400" /> Store Locator & Pickup
+            <MapPin className="w-3.5 h-3.5 text-slate-900" /> Store Locator & Pickup
           </button>
         </div>
       </div>

@@ -77,7 +77,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 href="https://www.instagram.com/mujtaba_designers_?utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-white border border-slate-200 hover:bg-slate-100 text-slate-900 flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-full bg-white border border-stone-200 hover:bg-stone-100 text-slate-900 flex items-center justify-center transition-colors"
                 title="Instagram"
               >
                 <Instagram className="w-4 h-4" />
@@ -86,7 +86,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 href="https://www.facebook.com/share/1EGmNs7afC/?mibextid=wwXIfr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:bg-blue-600 text-white flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-full bg-white border border-stone-200 hover:bg-slate-100 text-slate-900 flex items-center justify-center transition-colors"
                 title="Facebook"
               >
                 <Facebook className="w-4 h-4" />
@@ -95,7 +95,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 href="https://www.tiktok.com/@mujtabadesigenero?_r=1&_t=ZS-98iWriHXdFE"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-colors text-[11px] font-bold uppercase"
+                className="w-8 h-8 rounded-full bg-white border border-stone-200 hover:bg-slate-100 text-slate-900 flex items-center justify-center transition-colors text-[11px] font-bold uppercase"
                 title="TikTok"
               >
                 tt
@@ -174,10 +174,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
               </li>
               <li>
                 <a
-                  href="https://share.google/ObTR5vvNsyNTTRQAB"
+                  href="https://maps.google.com/?q=Rabi+Saddar,+Adam+Jee+Road,+Rawalpindi,+Pakistan"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-amber-400 transition-colors"
+                  className="hover:text-slate-950 transition-colors"
                 >
                   View Location on Google Maps
                 </a>
@@ -226,6 +226,17 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
             <span>100% Authentic Handcraft</span>
             <span>Worldwide Express Delivery</span>
             <span>Secure Checkout</span>
+          </div>
+        </div>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-700">
+          <div className="flex items-center gap-2 uppercase tracking-[0.2em] text-[10px] font-semibold">
+            <CreditCard className="w-4 h-4" />
+            Payment methods:
+          </div>
+          <div className="flex flex-wrap items-center gap-3 uppercase tracking-[0.2em] text-[10px] font-semibold text-slate-900">
+            <span>Visa</span>
+            <span>Mastercard</span>
+            <span>Shop Pay</span>
           </div>
         </div>
       </div>

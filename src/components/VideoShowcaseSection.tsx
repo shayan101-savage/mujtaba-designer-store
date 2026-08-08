@@ -135,7 +135,7 @@ export const VideoShowcaseSection: React.FC<VideoShowcaseSectionProps> = ({
 
           {/* Video Overlay Top Badge */}
           <div className="absolute top-4 sm:top-6 left-4 sm:left-6 z-20 flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 text-xs sm:text-sm font-semibold tracking-[0.2em] text-slate-900 shadow-md">
+            <div className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border border-stone-200 text-xs sm:text-sm font-semibold tracking-[0.2em] text-slate-900 shadow-md">
               <Film className="w-4 h-4 text-slate-900 animate-pulse" />
               <span>MUJTABA DESIGNER • OFFICIAL FILM 2026</span>
             </div>
@@ -169,16 +169,16 @@ export const VideoShowcaseSection: React.FC<VideoShowcaseSectionProps> = ({
           </div>
 
           {/* Bottom Video Caption & Quick Shop Banner Overlay */}
-          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent p-6 sm:p-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-6 z-20">
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-white via-white/80 to-transparent p-6 sm:p-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-6 z-20">
             <div className="max-w-xl">
-              <span className="text-amber-400 text-xs font-semibold tracking-[0.3em] uppercase block mb-1">
+              <span className="text-slate-900 text-xs font-semibold tracking-[0.3em] uppercase block mb-1">
                 FEATURED IN VIDEO
               </span>
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-wide">
+              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-slate-950 tracking-wide">
                 Welcome to Pure Luxury
               </h3>
-              <p className="text-stone-300 text-xs sm:text-sm font-light mt-1">
-                "Mujtaba Designer. Define your own style." Handcrafted with raw silk, intricate gold threadwork & bespoke tailoring.
+              <p className="text-slate-600 text-xs sm:text-sm font-light mt-1">
+                "Mujtaba Designer. Define your own style." Handcrafted with raw silk, intricate embroidery & couture tailoring.
               </p>
             </div>
 
@@ -205,15 +205,15 @@ export const VideoShowcaseSection: React.FC<VideoShowcaseSectionProps> = ({
         {/* Video Outfits Featured Cards Grid below video */}
         <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Card 1: Emerald Gown */}
-          <div className="bg-slate-900/90 border border-amber-500/30 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 shadow-xl backdrop-blur-md hover:border-amber-400 transition-all">
-            <div className="w-full sm:w-48 h-64 sm:h-56 rounded-xl overflow-hidden relative flex-shrink-0 border border-white/10">
+          <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="w-full sm:w-48 h-64 sm:h-56 rounded-xl overflow-hidden relative flex-shrink-0 border border-stone-200">
               <img
                 src={showcasePoster}
                 alt="Emerald Green Embroidered Couture Gown"
                 loading="lazy"
                 className="w-full h-full object-cover object-top"
               />
-              <span className="absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-md">
+              <span className="absolute top-3 left-3 bg-slate-950 text-white text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-md">
                 AS SEEN IN VIDEO
               </span>
             </div>
@@ -264,14 +264,14 @@ export const VideoShowcaseSection: React.FC<VideoShowcaseSectionProps> = ({
           </div>
 
           {/* Card 2: Pinstripe Suit */}
-          <div className="bg-slate-900/90 border border-amber-500/30 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 shadow-xl backdrop-blur-md hover:border-amber-400 transition-all">
-            <div className="w-full sm:w-48 h-64 sm:h-56 rounded-xl overflow-hidden relative flex-shrink-0 border border-white/10">
+          <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="w-full sm:w-48 h-64 sm:h-56 rounded-xl overflow-hidden relative flex-shrink-0 border border-stone-200">
               <img
                 src={showcasePoster}
-                alt="Shahzada Gold Pinstripe Suit"
+                alt="Bridal Couture Gown"
                 className="w-full h-full object-cover object-bottom"
               />
-              <span className="absolute top-3 left-3 bg-slate-950 text-amber-300 text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-md border border-amber-400/40">
+              <span className="absolute top-3 left-3 bg-slate-950 text-white text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-md border border-slate-700/30">
                 AS SEEN IN VIDEO
               </span>
             </div>
