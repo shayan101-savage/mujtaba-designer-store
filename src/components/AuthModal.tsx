@@ -333,18 +333,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   </div>
 
                   {/* Debug OTP Convenience Banner */}
-                  {debugOtp && (
-                    <div className="p-2.5 bg-stone-100 border border-stone-300 text-[11px] font-mono text-slate-800 flex justify-between items-center">
-                      <span>Generated Code (Preview): <strong className="text-amber-800 font-bold">{debugOtp}</strong></span>
-                      <button
-                        type="button"
-                        onClick={() => setOtpCode(debugOtp)}
-                        className="text-[10px] bg-amber-800 text-white px-2 py-0.5 font-sans uppercase font-semibold"
-                      >
-                        Auto Fill
-                      </button>
-                    </div>
-                  )}
+                      {debugOtp && import.meta.env.DEV && (
+                        <div className="p-2.5 bg-stone-100 border border-stone-300 text-[11px] font-mono text-slate-800 flex justify-between items-center">
+                          <span>Generated Code (Preview): <strong className="text-amber-800 font-bold">{debugOtp}</strong></span>
+                        </div>
+                      )}
 
                   <div>
                     <label className="block text-xs font-semibold text-slate-800 uppercase tracking-wider mb-1">

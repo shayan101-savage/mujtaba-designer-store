@@ -144,16 +144,21 @@ app.post('/api/auth/send-otp', async (req, res) => {
       console.warn(`[OTP EMAIL FAILED] ${emailKey} - ${emailErrorMessage}`);
     }
 
-    return res.json({
+    const baseResponse: any = {
       success: true,
       message: emailSent
         ? `Verification code dispatched to ${emailKey}`
         : `Verification code generated for ${emailKey}`,
       emailSent,
-      // For developer/demo convenience, return simulated OTP in response payload
-      debugOtp: otpCode,
       emailErrorMessage: emailErrorMessage || undefined
-    });
+    };
+
+    // Only include debugOtp when not in production
+    if (process.env.NODE_ENV !== 'production') {
+      baseResponse.debugOtp = otpCode;
+    }
+
+    return res.json(baseResponse);
   } catch (error: any) {
     console.error('Send OTP Error:', error);
     return res.status(500).json({ error: error.message || 'Server error sending verification code.' });
