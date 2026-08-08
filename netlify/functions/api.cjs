@@ -1,5 +1,5 @@
-const nodemailer = require('nodemailer');
-const { INITIAL_PRODUCTS } = require('../../src/data');
+import nodemailer from 'nodemailer';
+import { INITIAL_PRODUCTS } from '../../src/data.js';
 
 const productsStore = [...INITIAL_PRODUCTS];
 const usersStore = new Map();
@@ -48,7 +48,7 @@ const parseBody = (event) => {
   }
 };
 
-exports.handler = async function (event) {
+export const handler = async function (event) {
   const url = new URL(event.rawUrl || event.path, 'https://example.com');
   const path = url.pathname.replace(/\/+$|^\/+/, '');
   const segments = path.split('/');
