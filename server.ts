@@ -110,7 +110,7 @@ app.post('/api/auth/send-otp', async (req, res) => {
     if (transporter) {
       try {
         await transporter.sendMail({
-          from: `"Mujtaba Designer" <${process.env.EMAIL_USER || 'shayan.webdev.pk@gmail.com'}>`,
+          from: `"Mujtaba Designer" <${process.env.EMAIL_USER}>`,
           to: emailKey,
           subject: `${otpCode} is your Mujtaba Designer Verification Code`,
           html: `
