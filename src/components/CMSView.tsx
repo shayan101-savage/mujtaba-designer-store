@@ -1,0 +1,1141 @@
+import React, { useState, useEffect } from 'react';
+import { Product, Order, AdminUser } from '../types';
+import {
+  ShieldCheck,
+  User as UserIcon,
+  Lock,
+  RefreshCw,
+  Plus,
+  Edit,
+  Trash2,
+  CheckCircle2,
+  Package,
+  ShoppingBag,
+  ArrowLeft,
+  LogOut,
+  Sparkles,
+  Send,
+  ShieldAlert,
+  Film,
+} from 'lucide-react';
+import logoImg from '../assets/images/mujtaba_gold_logo_1786177848393.jpg';
+
+interface CMSViewProps {
+  admin: AdminUser | null;
+  products: Product[];
+  onProductsUpdated: () => void;
+  onAdminLoginSuccess: (admin: AdminUser, token: string) => void;
+  onAdminLogout: () => void;
+  onNavigateHome: () => void;
+}
+
+export const CMSView: React.FC<CMSViewProps> = ({
+  admin,
+  products,
+  onProductsUpdated,
+  onAdminLoginSuccess,
+  onAdminLogout,
+  onNavigateHome,
+}) => {
+  // Login Form States (for when admin is not logged in)
+  const [adminEmail, setAdminEmail] = useState('admin');
+  const [adminPassword, setAdminPassword] = useState('admin123');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  // CMS Dashboard States (when logged in)
+  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'add_product' | 'video'>('orders');
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [actionMessage, setActionMessage] = useState('');
+
+  // Video Settings State
+  const [heroVideoUrl, setHeroVideoUrl] = useState('');
+  const [heroPosterUrl, setHeroPosterUrl] = useState('');
+  const [showcaseVideoUrl, setShowcaseVideoUrl] = useState('');
+  const [showcasePosterUrl, setShowcasePosterUrl] = useState('');
+  const [showcaseTitle, setShowcaseTitle] = useState('');
+  const [showcaseSubtitle, setShowcaseSubtitle] = useState('');
+  const [loadingVideoSettings, setLoadingVideoSettings] = useState(false);
+  const [savingVideoSettings, setSavingVideoSettings] = useState(false);
+
+  // Product Form State
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [salePrice, setSalePrice] = useState('');
+  const [category, setCategory] = useState('MENSWEAR SHERWANI');
+  const [collection, setCollection] = useState('Bridal 2026');
+  const [imageUrl1, setImageUrl1] = useState('');
+  const [imageUrl2, setImageUrl2] = useState('');
+  const [sizesInput, setSizesInput] = useState('S, M, L, XL, Custom Stitching');
+  const [inStock, setInStock] = useState(true);
+  const [isFeatured, setIsFeatured] = useState(false);
+  const [savingProduct, setSavingProduct] = useState(false);
+
+  // Handle Admin Login Submit
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+    setLoginLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: adminEmail, password: adminPassword }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Invalid admin credentials.');
+      }
+
+      onAdminLoginSuccess(data.admin, data.token);
+    } catch (err: any) {
+      setLoginError(err.message || 'Authentication failed.');
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  // Fetch Orders
+  const fetchOrders = async () => {
+    setLoadingOrders(true);
+    try {
+      const res = await fetch('/api/orders/all');
+      const data = await res.json();
+      if (res.ok) {
+        setOrders(data.orders || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch orders:', err);
+    } finally {
+      setLoadingOrders(false);
+    }
+  };
+
+  // Fetch Video Settings
+  const fetchVideoSettings = async () => {
+    setLoadingVideoSettings(true);
+    try {
+      const res = await fetch('/api/settings/video');
+      const data = await res.json();
+      if (res.ok) {
+        setHeroVideoUrl(data.heroVideoUrl || '');
+        setHeroPosterUrl(data.heroPosterUrl || '');
+        setShowcaseVideoUrl(data.showcaseVideoUrl || '');
+        setShowcasePosterUrl(data.showcasePosterUrl || '');
+        setShowcaseTitle(data.showcaseTitle || '');
+        setShowcaseSubtitle(data.showcaseSubtitle || '');
+      }
+    } catch (err) {
+      console.error('Failed to fetch video settings:', err);
+    } finally {
+      setLoadingVideoSettings(false);
+    }
+  };
+
+  useEffect(() => {
+    if (admin) {
+      fetchOrders();
+      fetchVideoSettings();
+    }
+  }, [admin]);
+
+  const handleSaveVideoSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingVideoSettings(true);
+    setActionMessage('');
+    try {
+      const res = await fetch('/api/settings/video', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          heroVideoUrl,
+          heroPosterUrl,
+          showcaseVideoUrl,
+          showcasePosterUrl,
+          showcaseTitle,
+          showcaseSubtitle,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setActionMessage('Video Showcase configuration updated live successfully!');
+        setTimeout(() => setActionMessage(''), 4000);
+      } else {
+        alert(data.error || 'Failed to update video settings.');
+      }
+    } catch (err: any) {
+      alert(err.message || 'Error updating video settings.');
+    } finally {
+      setSavingVideoSettings(false);
+    }
+  };
+
+  const handleUpdateOrderStatus = async (orderId: string, newStatus: 'Confirmed' | 'Cancelled') => {
+    setActionMessage('');
+    try {
+      const res = await fetch(`/api/orders/${orderId}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update order status.');
+      }
+
+      setActionMessage(data.message || `Order status updated to ${newStatus}`);
+      fetchOrders();
+    } catch (err: any) {
+      setActionMessage(`Error: ${err.message}`);
+    }
+  };
+
+  const handleSaveProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setActionMessage('');
+
+    if (!title || !price || !category) {
+      setActionMessage('Title, Price, and Category are required.');
+      return;
+    }
+
+    setSavingProduct(true);
+
+    try {
+      const imagesArray = [imageUrl1.trim(), imageUrl2.trim()].filter(Boolean);
+      const sizesArray = sizesInput
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      const payload = {
+        title,
+        description,
+        price: parseFloat(price),
+        salePrice: salePrice ? parseFloat(salePrice) : null,
+        category,
+        collection,
+        images: imagesArray.length > 0 ? imagesArray : ['/assets/images/mujtaba_video_hero_1786177863771.jpg'],
+        sizes: sizesArray.length > 0 ? sizesArray : ['S', 'M', 'L', 'XL'],
+        inStock,
+        isFeatured,
+      };
+
+      let res;
+      if (editingProductId) {
+        res = await fetch(`/api/products/${editingProductId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        res = await fetch('/api/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to save product.');
+      }
+
+      setActionMessage(editingProductId ? 'Product updated successfully!' : 'New product published successfully!');
+      resetProductForm();
+      onProductsUpdated();
+      setActiveTab('products');
+    } catch (err: any) {
+      setActionMessage(`Error: ${err.message}`);
+    } finally {
+      setSavingProduct(false);
+    }
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm('Are you sure you want to delete this product from store catalog?')) return;
+
+    setActionMessage('');
+    try {
+      const res = await fetch(`/api/products/${productId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to delete product.');
+      }
+
+      setActionMessage('Product deleted successfully.');
+      onProductsUpdated();
+    } catch (err: any) {
+      setActionMessage(`Error: ${err.message}`);
+    }
+  };
+
+  const startEditProduct = (product: Product) => {
+    setEditingProductId(product.id);
+    setTitle(product.title);
+    setDescription(product.description || '');
+    setPrice(product.price.toString());
+    setSalePrice(product.salePrice ? product.salePrice.toString() : '');
+    setCategory(product.category);
+    setCollection(product.collection || 'Bridal 2026');
+    setImageUrl1(product.images[0] || '');
+    setImageUrl2(product.images[1] || '');
+    setSizesInput(product.sizes.join(', '));
+    setInStock(product.inStock);
+    setIsFeatured(product.isFeatured || false);
+    setActiveTab('add_product');
+  };
+
+  const resetProductForm = () => {
+    setEditingProductId(null);
+    setTitle('');
+    setDescription('');
+    setPrice('');
+    setSalePrice('');
+    setCategory('MENSWEAR SHERWANI');
+    setCollection('Bridal 2026');
+    setImageUrl1('');
+    setImageUrl2('');
+    setSizesInput('S, M, L, XL, Custom Stitching');
+    setInStock(true);
+    setIsFeatured(false);
+  };
+
+  // IF NOT LOGGED IN AS ADMIN -> SHOW CMS LOGIN PAGE
+  if (!admin) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
+        {/* Top Header Bar */}
+        <div className="p-6 border-b border-slate-800 flex justify-between items-center max-w-6xl mx-auto w-full">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={onNavigateHome}>
+            <div className="w-10 h-10 rounded-full border border-amber-400 p-0.5 bg-white overflow-hidden">
+              <img src={logoImg} alt="Mujtaba Logo" className="w-full h-full object-cover rounded-full" />
+            </div>
+            <div>
+              <span className="font-serif text-xl font-bold tracking-[0.2em] text-white uppercase block leading-none">
+                MUJTABA DESIGNER
+              </span>
+              <span className="text-[10px] tracking-[0.3em] text-amber-400 font-bold uppercase">ADMIN CMS PORTAL</span>
+            </div>
+          </div>
+
+          <button
+            onClick={onNavigateHome}
+            className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-300 hover:text-white px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4 text-amber-400" />
+            Back to Website Store
+          </button>
+        </div>
+
+        {/* Center Login Box */}
+        <div className="my-auto py-12 px-4 flex items-center justify-center">
+          <div className="w-full max-w-md bg-slate-900/90 border border-amber-500/30 rounded-3xl p-8 sm:p-10 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.8)] backdrop-blur-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-amber-500/10 border border-amber-400/40 rounded-full flex items-center justify-center mx-auto mb-4 text-amber-400">
+                <ShieldCheck className="w-8 h-8" />
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-wide text-white">
+                Admin CMS Access
+              </h2>
+              <p className="text-stone-400 text-xs sm:text-sm mt-2">
+                Enter your administrative credentials to manage store catalog, orders, and products.
+              </p>
+            </div>
+
+            {loginError && (
+              <div className="mb-6 p-4 bg-red-950/80 border border-red-500/50 rounded-xl text-red-200 text-xs flex items-center gap-3">
+                <ShieldAlert className="w-5 h-5 text-red-400 flex-shrink-0" />
+                <span>{loginError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleLoginSubmit} className="space-y-5">
+              <div className="p-3 bg-slate-950/60 border border-slate-800 rounded-xl text-xs text-stone-400 flex items-center justify-between">
+                <span>Default Login:</span>
+                <span className="font-mono text-amber-300 font-bold">admin / admin123</span>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest text-stone-300 mb-2">
+                  Admin Email / Username *
+                </label>
+                <div className="relative">
+                  <UserIcon className="absolute left-3.5 top-3 w-4 h-4 text-amber-400" />
+                  <input
+                    type="text"
+                    required
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-amber-400"
+                    placeholder="admin"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest text-stone-300 mb-2">
+                  Admin Password *
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3.5 top-3 w-4 h-4 text-amber-400" />
+                  <input
+                    type="password"
+                    required
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-amber-400"
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loginLoading}
+                className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm tracking-[0.2em] uppercase rounded-xl transition-all shadow-xl flex items-center justify-center gap-2 cursor-pointer mt-4"
+              >
+                {loginLoading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Log In to CMS Dashboard'}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Footer info */}
+        <div className="p-6 text-center text-xs text-stone-500 border-t border-slate-900">
+          Mujtaba Designer © 2026 Admin Content Management System
+        </div>
+      </div>
+    );
+  }
+
+  // LOGGED IN ADMIN CMS DASHBOARD VIEW
+  return (
+    <div className="min-h-screen bg-stone-100 text-slate-950 flex flex-col selection:bg-amber-800 selection:text-white">
+      {/* Top Header */}
+      <header className="bg-slate-950 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+        <div className="max-w-[1600px] mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full border border-amber-400 p-0.5 bg-white overflow-hidden">
+              <img src={logoImg} alt="Mujtaba Gold Logo" className="w-full h-full object-cover rounded-full" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-amber-400" />
+                <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase text-white">
+                  MUJTABA DESIGNER • CMS
+                </h1>
+              </div>
+              <p className="text-stone-400 text-xs">Logged in as: {admin.email}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onNavigateHome}
+              className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-stone-200 hover:text-white text-xs font-bold tracking-wider uppercase rounded-xl flex items-center gap-2 cursor-pointer transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 text-amber-400" />
+              Visit Website Store
+            </button>
+
+            <button
+              onClick={onAdminLogout}
+              className="px-4 py-2.5 bg-red-900/80 hover:bg-red-800 text-white text-xs font-bold tracking-wider uppercase rounded-xl flex items-center gap-2 cursor-pointer transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out CMS
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main CMS Body */}
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 py-8 w-full flex-1 flex flex-col">
+        {/* Navigation Tabs */}
+        <div className="flex flex-wrap items-center justify-between bg-white rounded-2xl p-2 border border-stone-200 shadow-sm mb-8 gap-4">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`px-6 py-3 rounded-xl text-xs font-bold tracking-[0.2em] uppercase transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'orders'
+                  ? 'bg-slate-950 text-amber-300 shadow-md'
+                  : 'text-stone-600 hover:bg-stone-100'
+              }`}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              Customer Orders ({orders.length})
+            </button>
+
+            <button
+              onClick={() => setActiveTab('products')}
+              className={`px-6 py-3 rounded-xl text-xs font-bold tracking-[0.2em] uppercase transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'products'
+                  ? 'bg-slate-950 text-amber-300 shadow-md'
+                  : 'text-stone-600 hover:bg-stone-100'
+              }`}
+            >
+              <Package className="w-4 h-4" />
+              Store Products ({products.length})
+            </button>
+
+            <button
+              onClick={() => {
+                resetProductForm();
+                setActiveTab('add_product');
+              }}
+              className={`px-6 py-3 rounded-xl text-xs font-bold tracking-[0.2em] uppercase transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'add_product'
+                  ? 'bg-amber-800 text-white shadow-md'
+                  : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
+              }`}
+            >
+              <Plus className="w-4 h-4" />
+              {editingProductId ? 'Edit Product' : 'Add New Product'}
+            </button>
+
+            <button
+              onClick={() => setActiveTab('video')}
+              className={`px-6 py-3 rounded-xl text-xs font-bold tracking-[0.2em] uppercase transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'video'
+                  ? 'bg-slate-950 text-amber-300 shadow-md'
+                  : 'text-stone-600 hover:bg-stone-100'
+              }`}
+            >
+              <Film className="w-4 h-4 text-amber-400" />
+              Video Showcase Manager
+            </button>
+          </div>
+
+          <button
+            onClick={fetchOrders}
+            className="px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-stone-700 hover:text-slate-950 flex items-center gap-2 cursor-pointer"
+          >
+            <RefreshCw className={`w-4 h-4 ${loadingOrders ? 'animate-spin text-amber-800' : ''}`} />
+            Refresh Orders
+          </button>
+        </div>
+
+        {/* Global Action Banner */}
+        {actionMessage && (
+          <div className="mb-6 p-4 bg-slate-950 text-amber-300 border border-amber-400/40 rounded-2xl text-xs sm:text-sm font-semibold flex items-center justify-between shadow-lg">
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="w-5 h-5 text-amber-400 flex-shrink-0" />
+              <span>{actionMessage}</span>
+            </div>
+            <button onClick={() => setActionMessage('')} className="text-stone-400 hover:text-white text-xs font-bold">
+              Dismiss
+            </button>
+          </div>
+        )}
+
+        {/* TAB 1: CUSTOMER ORDERS */}
+        {activeTab === 'orders' && (
+          <div className="bg-white rounded-2xl border border-stone-200 p-6 sm:p-8 shadow-sm flex-1">
+            <div className="flex items-center justify-between pb-6 mb-6 border-b border-stone-200">
+              <div>
+                <h2 className="font-serif text-2xl font-bold uppercase tracking-wide">Customer Orders</h2>
+                <p className="text-stone-500 text-xs mt-1">
+                  Manage incoming customer orders. Confirm orders to send email notifications.
+                </p>
+              </div>
+            </div>
+
+            {loadingOrders ? (
+              <div className="py-20 text-center text-stone-500 flex flex-col items-center gap-3">
+                <RefreshCw className="w-8 h-8 animate-spin text-amber-800" />
+                <p className="text-sm font-semibold">Loading orders data...</p>
+              </div>
+            ) : orders.length === 0 ? (
+              <div className="py-16 text-center text-stone-500 bg-stone-50 rounded-2xl border border-stone-200 p-8">
+                <ShoppingBag className="w-12 h-12 text-stone-300 mx-auto mb-3" />
+                <p className="font-bold text-lg text-slate-800">No orders placed yet.</p>
+                <p className="text-xs text-stone-500 mt-1">When customers complete checkout, their orders will appear here.</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {orders.map((order) => (
+                  <div
+                    key={order.id}
+                    className="border border-stone-200 rounded-2xl p-6 bg-stone-50/50 hover:bg-white transition-all shadow-xs"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-stone-200">
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-800 block">
+                          ORDER #{order.id.slice(-8).toUpperCase()}
+                        </span>
+                        <h3 className="font-serif text-lg font-bold text-slate-900 mt-0.5">
+                          {order.customerName}
+                        </h3>
+                        <div className="flex items-center gap-3 text-xs text-stone-600 mt-1">
+                          <span>{order.customerEmail}</span>
+                          <span>•</span>
+                          <span>{order.customerPhone}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest ${
+                            order.status === 'Confirmed'
+                              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                              : order.status === 'Cancelled'
+                              ? 'bg-red-100 text-red-800 border border-red-300'
+                              : 'bg-amber-100 text-amber-900 border border-amber-300'
+                          }`}
+                        >
+                          {order.status}
+                        </span>
+
+                        <div className="text-right">
+                          <span className="block text-xs text-stone-500">Total Amount</span>
+                          <span className="font-sans font-bold text-lg text-slate-950">
+                            Rs. {order.totalAmount.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="py-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">
+                          Delivery Address
+                        </h4>
+                        <p className="text-xs text-slate-800 leading-relaxed bg-white p-3 rounded-xl border border-stone-200">
+                          {order.deliveryAddress}
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">
+                          Ordered Items ({order.items.length})
+                        </h4>
+                        <div className="space-y-2 bg-white p-3 rounded-xl border border-stone-200 max-h-36 overflow-y-auto">
+                          {order.items.map((item, idx) => (
+                            <div key={idx} className="flex justify-between items-center text-xs text-slate-800">
+                              <span className="font-semibold">{item.title} ({item.size}) x {item.quantity}</span>
+                              <span className="font-bold">Rs. {(item.price * item.quantity).toLocaleString()}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Status Action Buttons */}
+                    <div className="pt-4 border-t border-stone-200 flex items-center justify-between">
+                      <span className="text-[11px] text-stone-500">
+                        Placed on: {new Date(order.createdAt).toLocaleString()}
+                      </span>
+
+                      <div className="flex items-center gap-2">
+                        {order.status !== 'Confirmed' && (
+                          <button
+                            onClick={() => handleUpdateOrderStatus(order.id, 'Confirmed')}
+                            className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold tracking-wider uppercase rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+                          >
+                            <Send className="w-3.5 h-3.5" /> Confirm Order
+                          </button>
+                        )}
+
+                        {order.status !== 'Cancelled' && (
+                          <button
+                            onClick={() => handleUpdateOrderStatus(order.id, 'Cancelled')}
+                            className="px-4 py-2 bg-stone-200 hover:bg-stone-300 text-slate-800 text-xs font-bold tracking-wider uppercase rounded-xl transition-all cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 2: STORE PRODUCTS CATALOG */}
+        {activeTab === 'products' && (
+          <div className="bg-white rounded-2xl border border-stone-200 p-6 sm:p-8 shadow-sm flex-1">
+            <div className="flex flex-wrap justify-between items-center pb-6 mb-6 border-b border-stone-200 gap-4">
+              <div>
+                <h2 className="font-serif text-2xl font-bold uppercase tracking-wide">Store Catalog Products</h2>
+                <p className="text-stone-500 text-xs mt-1">
+                  Manage product catalog, edit pricing, or add new couture outfits.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  resetProductForm();
+                  setActiveTab('add_product');
+                }}
+                className="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-md"
+              >
+                <Plus className="w-4 h-4" /> Add Product
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products.map((p) => (
+                <div key={p.id} className="border border-stone-200 rounded-2xl overflow-hidden bg-stone-50 flex flex-col justify-between">
+                  <div className="relative aspect-[3/4] h-52 w-full bg-stone-200 overflow-hidden">
+                    <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover object-top" />
+                    <span className="absolute top-3 left-3 bg-slate-950 text-amber-300 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase">
+                      {p.category}
+                    </span>
+                  </div>
+
+                  <div className="p-4 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="font-serif text-base font-bold text-slate-900 line-clamp-1">{p.title}</h3>
+                      <p className="text-xs text-stone-500 line-clamp-2 mt-1">{p.description}</p>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-stone-200 flex items-center justify-between">
+                      <span className="font-bold text-sm text-slate-900">Rs. {p.price.toLocaleString()}</span>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => startEditProduct(p)}
+                          className="p-2 bg-stone-200 hover:bg-amber-100 text-slate-800 hover:text-amber-900 rounded-lg transition-colors cursor-pointer"
+                          title="Edit Product"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteProduct(p.id)}
+                          className="p-2 bg-red-100 hover:bg-red-200 text-red-800 rounded-lg transition-colors cursor-pointer"
+                          title="Delete Product"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: ADD / EDIT PRODUCT FORM */}
+        {activeTab === 'add_product' && (
+          <div className="bg-white rounded-2xl border border-stone-200 p-6 sm:p-10 shadow-sm max-w-4xl mx-auto w-full">
+            <h2 className="font-serif text-2xl font-bold uppercase tracking-wide pb-4 mb-6 border-b border-stone-200">
+              {editingProductId ? 'Edit Product Details' : 'Add New Couture Product'}
+            </h2>
+
+            <form onSubmit={handleSaveProduct} className="space-y-6">
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                  Product Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Gull-e-Emerald Silk Velvet Gown"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-4 py-3 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-amber-800"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                  Detailed Description
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Describe fabric, embroidery details, zari work..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full px-4 py-3 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-amber-800"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                    Original Price (Rs.) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    placeholder="150000"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="w-full px-4 py-3 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-amber-800"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                    Sale Price (Rs.) Optional
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="135000"
+                    value={salePrice}
+                    onChange={(e) => setSalePrice(e.target.value)}
+                    className="w-full px-4 py-3 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-amber-800"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                    Category *
+                  </label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full px-4 py-3 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-amber-800 bg-white"
+                  >
+                    <option value="MENSWEAR SHERWANI">MENSWEAR SHERWANI</option>
+                    <option value="COUTURE">COUTURE</option>
+                    <option value="LUXURY LAWN">LUXURY LAWN</option>
+                    <option value="VELVET EDITION">VELVET EDITION</option>
+                    <option value="FESTIVE PRET">FESTIVE PRET</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                    Collection / Campaign Tag
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Pure Luxury 2026"
+                    value={collection}
+                    onChange={(e) => setCollection(e.target.value)}
+                    className="w-full px-4 py-3 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-amber-800"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                    Primary Image URL
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={imageUrl1}
+                    onChange={(e) => setImageUrl1(e.target.value)}
+                    className="w-full px-4 py-3 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-amber-800"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                    Secondary Image URL
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={imageUrl2}
+                    onChange={(e) => setImageUrl2(e.target.value)}
+                    className="w-full px-4 py-3 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-amber-800"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                  Available Sizes (Comma Separated)
+                </label>
+                <input
+                  type="text"
+                  placeholder="S, M, L, XL, Custom Stitching"
+                  value={sizesInput}
+                  onChange={(e) => setSizesInput(e.target.value)}
+                  className="w-full px-4 py-3 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-amber-800"
+                />
+              </div>
+
+              <div className="flex gap-8 pt-2">
+                <label className="flex items-center gap-2 text-sm font-semibold cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={inStock}
+                    onChange={(e) => setInStock(e.target.checked)}
+                    className="w-4 h-4 accent-amber-800"
+                  />
+                  <span>In Stock</span>
+                </label>
+
+                <label className="flex items-center gap-2 text-sm font-semibold cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isFeatured}
+                    onChange={(e) => setIsFeatured(e.target.checked)}
+                    className="w-4 h-4 accent-amber-800"
+                  />
+                  <span>Featured Hero Showcase</span>
+                </label>
+              </div>
+
+              <div className="flex gap-4 pt-6 border-t border-stone-200">
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetProductForm();
+                    setActiveTab('products');
+                  }}
+                  className="px-6 py-3 border border-stone-300 text-slate-700 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-stone-100"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={savingProduct}
+                  className="flex-1 py-3.5 bg-amber-800 hover:bg-amber-900 text-white font-bold text-xs uppercase tracking-[0.2em] rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                >
+                  {savingProduct ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Save & Publish Product'}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* TAB 4: VIDEO SHOWCASE MANAGER */}
+        {activeTab === 'video' && (
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-stone-200 shadow-md">
+            <div className="flex items-center gap-3 mb-8 pb-6 border-b border-stone-200">
+              <div className="p-3 bg-slate-950 text-amber-300 rounded-2xl border border-amber-400/30">
+                <Film className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="font-serif text-2xl font-bold uppercase tracking-wider text-slate-950">
+                  Cinematic Video Showcase & Hero Media Control
+                </h2>
+                <p className="text-stone-500 text-xs sm:text-sm mt-1">
+                  Change the main website background video, runway video showcase MP4 URLs, poster images, and custom section headings live from your CMS.
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSaveVideoSettings} className="space-y-10">
+              {/* Preset Video Quick Fill Bar */}
+              <div className="p-4 bg-amber-50/80 rounded-2xl border border-amber-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2 font-bold text-amber-900 uppercase">
+                  <Sparkles className="w-4 h-4 text-amber-700" />
+                  <span>Quick Preset Video Library:</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHeroVideoUrl('https://assets.mixkit.co/videos/preview/mixkit-fashion-model-in-a-white-dress-walking-41443-large.mp4');
+                      setShowcaseVideoUrl('https://assets.mixkit.co/videos/preview/mixkit-fashion-model-in-a-white-dress-walking-41443-large.mp4');
+                    }}
+                    className="px-3 py-1.5 bg-white border border-amber-300 text-amber-900 font-semibold rounded-lg hover:bg-amber-100 transition-colors cursor-pointer"
+                  >
+                    Preset 1: Haute Fashion Runway
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHeroVideoUrl('https://assets.mixkit.co/videos/preview/mixkit-woman-wearing-a-red-dress-walking-41442-large.mp4');
+                      setShowcaseVideoUrl('https://assets.mixkit.co/videos/preview/mixkit-woman-wearing-a-red-dress-walking-41442-large.mp4');
+                    }}
+                    className="px-3 py-1.5 bg-white border border-amber-300 text-amber-900 font-semibold rounded-lg hover:bg-amber-100 transition-colors cursor-pointer"
+                  >
+                    Preset 2: Crimson Couture Reel
+                  </button>
+                </div>
+              </div>
+
+              {/* Section 1: Hero Top Background Video */}
+              <div className="p-6 bg-stone-50 rounded-2xl border border-stone-200 space-y-6">
+                <h3 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-amber-600" />
+                  1. Main Hero Background Video Settings (Top Section)
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
+                      Hero Video MP4 / WebM Direct URL *
+                    </label>
+                    <input
+                      type="url"
+                      required
+                      placeholder="https://example.com/video.mp4"
+                      value={heroVideoUrl}
+                      onChange={(e) => setHeroVideoUrl(e.target.value)}
+                      className="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-amber-800"
+                    />
+                    <p className="text-[11px] text-stone-500 mt-1">
+                      Paste a direct .mp4 or .webm link. This loops seamlessly in the top Hero Banner.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
+                      Hero Video Fallback Poster Image URL
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="/assets/images/mujtaba_video_hero_1786177863771.jpg or https://..."
+                      value={heroPosterUrl}
+                      onChange={(e) => setHeroPosterUrl(e.target.value)}
+                      className="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-amber-800"
+                    />
+                    <p className="text-[11px] text-stone-500 mt-1">
+                      Image shown while video is loading or on low-bandwidth mobile devices.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Hero Video Live Preview Box */}
+                {heroVideoUrl && (
+                  <div className="mt-4 p-4 bg-slate-950 rounded-2xl border border-slate-800">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 block mb-2">
+                      Hero Background Video Preview:
+                    </span>
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      src={heroVideoUrl}
+                      poster={heroPosterUrl}
+                      className="w-full h-48 object-cover rounded-xl border border-amber-400/20"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Section 2: Video Showcase Runway Section */}
+              <div className="p-6 bg-stone-50 rounded-2xl border border-stone-200 space-y-6">
+                <h3 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-slate-950" />
+                  2. Showcase Runway Section Video Settings
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
+                      Showcase Section Video MP4 URL *
+                    </label>
+                    <input
+                      type="url"
+                      required
+                      placeholder="https://example.com/runway_video.mp4"
+                      value={showcaseVideoUrl}
+                      onChange={(e) => setShowcaseVideoUrl(e.target.value)}
+                      className="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-amber-800"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
+                      Showcase Video Poster Image URL
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Image Poster URL"
+                      value={showcasePosterUrl}
+                      onChange={(e) => setShowcasePosterUrl(e.target.value)}
+                      className="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-amber-800"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
+                      Showcase Title Text
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="PURE LUXURY • DEFINE YOUR STYLE"
+                      value={showcaseTitle}
+                      onChange={(e) => setShowcaseTitle(e.target.value)}
+                      className="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-amber-800"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
+                      Showcase Subtitle Description
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Watch the official Mujtaba Designer 2026 runway showcase..."
+                      value={showcaseSubtitle}
+                      onChange={(e) => setShowcaseSubtitle(e.target.value)}
+                      className="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-amber-800"
+                    />
+                  </div>
+                </div>
+
+                {/* Showcase Video Live Preview Box */}
+                {showcaseVideoUrl && (
+                  <div className="mt-4 p-4 bg-slate-950 rounded-2xl border border-slate-800">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 block mb-2">
+                      Showcase Section Video Preview:
+                    </span>
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      src={showcaseVideoUrl}
+                      poster={showcasePosterUrl}
+                      className="w-full h-48 object-cover rounded-xl border border-amber-400/20"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Submit Buttons */}
+              <div className="flex gap-4 pt-6 border-t border-stone-200">
+                <button
+                  type="button"
+                  onClick={fetchVideoSettings}
+                  className="px-6 py-3.5 border border-stone-300 text-slate-700 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-stone-100 cursor-pointer"
+                >
+                  Reset Settings
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={savingVideoSettings}
+                  className="flex-1 py-4 bg-slate-950 hover:bg-amber-800 text-amber-300 hover:text-white font-bold text-xs uppercase tracking-[0.25em] rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xl border border-amber-400/40"
+                >
+                  {savingVideoSettings ? (
+                    <RefreshCw className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      <Film className="w-5 h-5 text-amber-400" />
+                      Save & Publish Video Settings Live
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

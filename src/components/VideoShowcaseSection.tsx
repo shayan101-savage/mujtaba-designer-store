@@ -1,0 +1,322 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { Play, Pause, Volume2, VolumeX, Sparkles, ShoppingBag, ArrowRight, Check, Film, Maximize } from 'lucide-react';
+import { motion } from 'motion/react';
+import videoHeroPosterDefault from '../assets/images/mujtaba_video_hero_1786177863771.jpg';
+import { Product, VideoSettings } from '../types';
+
+interface VideoShowcaseSectionProps {
+  onQuickView: (product: Product) => void;
+  onAddToCart: (product: Product, size: string) => void;
+  videoSettings?: VideoSettings | null;
+}
+
+export const VideoShowcaseSection: React.FC<VideoShowcaseSectionProps> = ({
+  onQuickView,
+  onAddToCart,
+  videoSettings,
+}) => {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const [addedEmerald, setAddedEmerald] = useState(false);
+  const [addedSuit, setAddedSuit] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const showcaseVideoSrc = videoSettings?.showcaseVideoUrl || "https://assets.mixkit.co/videos/preview/mixkit-fashion-model-in-a-white-dress-walking-41443-large.mp4";
+  const showcasePoster = videoSettings?.showcasePosterUrl || videoHeroPosterDefault;
+  const showcaseTitle = videoSettings?.showcaseTitle || "PURE LUXURY • DEFINE YOUR STYLE";
+  const showcaseSubtitle = videoSettings?.showcaseSubtitle || "Watch the official Mujtaba Designer 2026 runway showcase featuring our signature emerald embroidered gown & gold-pinstripe bespoke suit.";
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(() => {});
+      setIsPlaying(true);
+    }
+  }, [showcaseVideoSrc]);
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
+  const toggleFullscreen = () => {
+    if (videoRef.current) {
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
+      }
+    }
+  };
+
+  // Featured outfits from the video
+  const emeraldGownProduct: Product = {
+    id: 'video-outfit-1',
+    title: 'Gull-e-Emerald Royal Couture Gown',
+    description: 'As featured in the Mujtaba Designer video. Deep emerald green silk shirt enriched with antique gold hand zardozi motifs on neckline and sleeves.',
+    price: 195000,
+    salePrice: 175000,
+    category: 'Couture',
+    collection: 'Pure Luxury Video Edition',
+    images: [showcasePoster],
+    sizes: ['S', 'M', 'L', 'Custom Stitching'],
+    inStock: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+  };
+
+  const pinstripeSuitProduct: Product = {
+    id: 'video-outfit-2',
+    title: 'Shahzada Gold Pinstripe Bespoke Suit',
+    description: 'As featured in the Mujtaba Designer video. Hand-tailored Italian wool-silk black suit with woven metallic gold pinstripes and structured peak lapel.',
+    price: 125000,
+    category: 'Menswear Sherwani',
+    collection: 'Pure Luxury Video Edition',
+    images: [showcasePoster],
+    sizes: ['S', 'M', 'L', 'XL', 'Bespoke Tailoring'],
+    inStock: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+  };
+
+  return (
+    <section className="w-full bg-slate-950 text-white py-16 sm:py-24 border-y border-slate-800/80 relative overflow-hidden">
+      {/* Background ambient gold glow */}
+      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold tracking-[0.3em] uppercase mb-3">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            HAUTE COUTURE CINEMATIC FILM
+          </div>
+          <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl font-light tracking-[0.2em] text-white uppercase leading-tight">
+            {showcaseTitle}
+          </h2>
+          <p className="text-stone-300 text-sm sm:text-base md:text-lg font-light tracking-wide mt-4">
+            {showcaseSubtitle}
+          </p>
+        </div>
+
+        {/* Large Grand Video Player Container */}
+        <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.6)] border border-amber-500/20 bg-slate-900 group">
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted={isMuted}
+            playsInline
+            poster={showcasePoster}
+            className="w-full aspect-[16/9] md:aspect-[21/9] object-cover object-center filter brightness-100 transition-all duration-500"
+          >
+            <source
+              src={showcaseVideoSrc}
+              type="video/mp4"
+            />
+            <img
+              src={showcasePoster}
+              alt="Mujtaba Designer Video Frame"
+              className="w-full h-full object-cover"
+            />
+          </video>
+
+          {/* Video Overlay Top Badge */}
+          <div className="absolute top-4 sm:top-6 left-4 sm:left-6 z-20 flex items-center gap-3">
+            <div className="flex items-center gap-2 bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-full border border-amber-400/40 text-xs sm:text-sm font-semibold tracking-[0.2em] text-amber-300 shadow-xl">
+              <Film className="w-4 h-4 text-amber-400 animate-pulse" />
+              <span>MUJTABA DESIGNER • OFFICIAL FILM 2026</span>
+            </div>
+          </div>
+
+          {/* Video Control Buttons Top Right */}
+          <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-20 flex items-center gap-2 bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-white shadow-xl">
+            <button
+              onClick={togglePlay}
+              className="hover:text-amber-300 p-1.5 transition-colors cursor-pointer"
+              title={isPlaying ? 'Pause Film' : 'Play Film'}
+            >
+              {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+            </button>
+            <div className="w-[1px] h-4 bg-white/20" />
+            <button
+              onClick={toggleMute}
+              className="hover:text-amber-300 p-1.5 transition-colors cursor-pointer"
+              title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
+            >
+              {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+            </button>
+            <div className="w-[1px] h-4 bg-white/20" />
+            <button
+              onClick={toggleFullscreen}
+              className="hover:text-amber-300 p-1.5 transition-colors cursor-pointer"
+              title="Fullscreen"
+            >
+              <Maximize className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Bottom Video Caption & Quick Shop Banner Overlay */}
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent p-6 sm:p-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-6 z-20">
+            <div className="max-w-xl">
+              <span className="text-amber-400 text-xs font-semibold tracking-[0.3em] uppercase block mb-1">
+                FEATURED IN VIDEO
+              </span>
+              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-wide">
+                Welcome to Pure Luxury
+              </h3>
+              <p className="text-stone-300 text-xs sm:text-sm font-light mt-1">
+                "Mujtaba Designer. Define your own style." Handcrafted with raw silk, intricate gold threadwork & bespoke tailoring.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+              <button
+                onClick={() => onQuickView(emeraldGownProduct)}
+                className="flex-1 md:flex-none px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm tracking-[0.2em] uppercase rounded-xl transition-all shadow-xl flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>SHOP EMERALD GOWN</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => onQuickView(pinstripeSuitProduct)}
+                className="flex-1 md:flex-none px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md font-bold text-xs sm:text-sm tracking-[0.2em] uppercase rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>SHOP PINSTRIPE SUIT</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Video Outfits Featured Cards Grid below video */}
+        <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Card 1: Emerald Gown */}
+          <div className="bg-slate-900/90 border border-amber-500/30 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 shadow-xl backdrop-blur-md hover:border-amber-400 transition-all">
+            <div className="w-full sm:w-48 h-64 sm:h-56 rounded-xl overflow-hidden relative flex-shrink-0 border border-white/10">
+              <img
+                src={showcasePoster}
+                alt="Emerald Green Embroidered Couture Gown"
+                className="w-full h-full object-cover object-top"
+              />
+              <span className="absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-md">
+                AS SEEN IN VIDEO
+              </span>
+            </div>
+            <div className="flex-1 flex flex-col justify-between h-full">
+              <div>
+                <span className="text-[11px] font-bold tracking-[0.25em] text-amber-400 uppercase">
+                  FEMALE HAUTE COUTURE
+                </span>
+                <h4 className="font-serif text-xl sm:text-2xl font-bold text-white mt-1">
+                  Gull-e-Emerald Couture Gown
+                </h4>
+                <p className="text-stone-400 text-xs sm:text-sm leading-relaxed mt-2">
+                  Hand-embroidered gold zardozi motifs on pure emerald silk. Custom stitching & fitting available.
+                </p>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+                <div>
+                  <span className="text-amber-300 font-bold text-lg sm:text-xl font-sans">
+                    Rs. 175,000
+                  </span>
+                  <span className="text-stone-500 text-xs line-through ml-2">
+                    Rs. 195,000
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    onAddToCart(emeraldGownProduct, 'M');
+                    setAddedEmerald(true);
+                    setTimeout(() => setAddedEmerald(false), 1500);
+                  }}
+                  className={`px-4 py-2.5 text-xs font-bold tracking-wider uppercase rounded-lg flex items-center gap-2 transition-all cursor-pointer ${
+                    addedEmerald ? 'bg-emerald-600 text-white' : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+                  }`}
+                >
+                  {addedEmerald ? (
+                    <>
+                      <Check className="w-4 h-4" /> Added
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="w-4 h-4" /> Add to Bag
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: Pinstripe Suit */}
+          <div className="bg-slate-900/90 border border-amber-500/30 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 shadow-xl backdrop-blur-md hover:border-amber-400 transition-all">
+            <div className="w-full sm:w-48 h-64 sm:h-56 rounded-xl overflow-hidden relative flex-shrink-0 border border-white/10">
+              <img
+                src={showcasePoster}
+                alt="Shahzada Gold Pinstripe Suit"
+                className="w-full h-full object-cover object-bottom"
+              />
+              <span className="absolute top-3 left-3 bg-slate-950 text-amber-300 text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-md border border-amber-400/40">
+                AS SEEN IN VIDEO
+              </span>
+            </div>
+            <div className="flex-1 flex flex-col justify-between h-full">
+              <div>
+                <span className="text-[11px] font-bold tracking-[0.25em] text-amber-400 uppercase">
+                  MENSWEAR BESPOKE TAILORING
+                </span>
+                <h4 className="font-serif text-xl sm:text-2xl font-bold text-white mt-1">
+                  Shahzada Pinstripe Suit
+                </h4>
+                <p className="text-stone-400 text-xs sm:text-sm leading-relaxed mt-2">
+                  Italian wool-silk black suit with gold metallic pinstripes and structured peak lapel tailoring.
+                </p>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+                <div>
+                  <span className="text-amber-300 font-bold text-lg sm:text-xl font-sans">
+                    Rs. 125,000
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    onAddToCart(pinstripeSuitProduct, 'L');
+                    setAddedSuit(true);
+                    setTimeout(() => setAddedSuit(false), 1500);
+                  }}
+                  className={`px-4 py-2.5 text-xs font-bold tracking-wider uppercase rounded-lg flex items-center gap-2 transition-all cursor-pointer ${
+                    addedSuit ? 'bg-emerald-600 text-white' : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+                  }`}
+                >
+                  {addedSuit ? (
+                    <>
+                      <Check className="w-4 h-4" /> Added
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="w-4 h-4" /> Add to Bag
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
