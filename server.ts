@@ -56,8 +56,8 @@ app.put('/api/settings/video', (req, res) => {
 
 // Configure Nodemailer Transporter
 const createTransporter = () => {
-  const emailUser = process.env.EMAIL_USER || 'shayankashuf@gmail.com';
-  const emailPass = process.env.EMAIL_PASS || 'iuuscdmvmprolkth';
+  const emailUser = process.env.EMAIL_USER;
+  const emailPass = process.env.EMAIL_PASS;
 
   if (!emailUser || !emailPass) {
     console.warn('Nodemailer credentials not provided via environment variables. Email dispatches will be simulated.');
@@ -251,8 +251,8 @@ app.post('/api/auth/admin-login', (req, res) => {
   try {
     const { email, password } = req.body;
     console.log(`[ADMIN LOGIN ATTEMPT] email=${email}`);
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
 
     console.log(`[ADMIN CREDENTIALS] expected=${adminEmail} / ${adminPassword ? '***' : 'not-set'}`);
 

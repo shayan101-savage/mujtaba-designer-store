@@ -52,8 +52,8 @@ const persistState = () => {
 };
 
 const createTransporter = () => {
-  const emailUser = process.env.EMAIL_USER || 'shayankashuf@gmail.com';
-  const emailPass = process.env.EMAIL_PASS || 'iuuscdmvmprolkth';
+  const emailUser = process.env.EMAIL_USER;
+  const emailPass = process.env.EMAIL_PASS;
 
   if (!emailUser || !emailPass) {
     console.warn('Nodemailer credentials not provided via environment variables. Email dispatches will be simulated.');
@@ -194,8 +194,8 @@ const handler = async function (event) {
   if (path === 'api/auth/admin-login' && method === 'POST') {
     if (!body) return respond(400, { error: 'Invalid JSON body.' });
     const { email, password } = body;
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
     if (email === adminEmail && password === adminPassword) {
       const token = `admin_token_${Date.now()}`;
       return respond(200, { success: true, admin: { email: adminEmail, role: 'admin' }, token });

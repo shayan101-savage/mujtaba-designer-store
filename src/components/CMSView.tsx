@@ -41,8 +41,8 @@ export const CMSView: React.FC<CMSViewProps> = ({
   onNavigateHome,
 }) => {
   // Login Form States (for when admin is not logged in)
-  const [adminEmail, setAdminEmail] = useState('admin');
-  const [adminPassword, setAdminPassword] = useState('admin123');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
 
@@ -413,7 +413,7 @@ export const CMSView: React.FC<CMSViewProps> = ({
             <form onSubmit={handleLoginSubmit} className="space-y-5">
               <div className="p-3 bg-slate-950/60 border border-slate-800 rounded-xl text-xs text-stone-400 flex items-center justify-between">
                 <span>Default Login:</span>
-                <span className="font-mono text-amber-300 font-bold">admin / admin123</span>
+                <span className="font-mono text-amber-300 font-bold">Use your configured admin credentials</span>
               </div>
 
               <div>

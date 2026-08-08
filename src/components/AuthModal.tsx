@@ -34,8 +34,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [successMsg, setSuccessMsg] = useState('');
 
   // Admin Form States
-  const [adminEmail, setAdminEmail] = useState('admin');
-  const [adminPassword, setAdminPassword] = useState('admin123');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
 
   // Step 1: Send OTP to Gmail
   const handleSendOTP = async (e: React.FormEvent) => {
