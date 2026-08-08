@@ -55,7 +55,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
   };
 
   return (
-    <section className="relative w-full h-[90vh] min-h-[620px] max-h-[960px] overflow-hidden bg-slate-950 text-white flex items-center justify-center">
+    <section className="relative w-full h-[90vh] min-h-[620px] max-h-[960px] overflow-hidden bg-white text-slate-950 flex items-center justify-center">
       {/* Background Video Loop with High Res Image Fallback */}
       <video
         ref={videoRef}
@@ -83,12 +83,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
 
       {/* Dynamic Dark Overlay for Superior Legibility */}
       <div
-        className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-slate-950/30 transition-opacity duration-300"
+        className="absolute inset-0 bg-white transition-opacity duration-300"
         style={{ opacity: overlayOpacity }}
       />
 
       {/* Frosted Glass Video Controls Overlay Bar */}
-      <div className="absolute top-6 right-6 z-20 flex items-center gap-3 bg-slate-950/80 backdrop-blur-md px-5 py-2.5 rounded-full border border-amber-400/30 text-xs sm:text-sm text-white shadow-2xl">
+      <div className="absolute top-6 right-6 z-20 flex items-center gap-3 bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-full border border-slate-200 text-xs sm:text-sm text-slate-900 shadow-md">
         <button
           onClick={togglePlay}
           className="hover:text-amber-300 transition-colors p-1 cursor-pointer"
@@ -161,7 +161,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-950/80 backdrop-blur-md border border-amber-400/50 text-amber-300 text-xs sm:text-sm font-bold tracking-[0.35em] uppercase mb-5 shadow-xl"
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/90 border border-slate-200 text-slate-900 text-xs sm:text-sm font-bold tracking-[0.35em] uppercase mb-5 shadow-lg"
         >
           <Sparkles className="w-4 h-4 text-amber-300" />
           ROYAL BRIDAL & SHERWANI COLLECTION 2026
@@ -185,7 +185,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="max-w-3xl text-stone-200 text-sm sm:text-base md:text-lg font-light tracking-wider leading-relaxed mt-6 drop-shadow-md"
+          className="max-w-3xl text-slate-700 text-sm sm:text-base md:text-lg font-light tracking-wider leading-relaxed mt-6"
         >
           Unrivalled craftsmanship meets modern royal aesthetics. Explore hand-worked zardozi
           sherwanis, regal emerald velvet gowns, and bespoke gold-pinstripe tailoring.
@@ -200,7 +200,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
         >
           <button
             onClick={() => onExploreClick('COUTURE')}
-            className="px-10 py-4 sm:py-5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm tracking-[0.3em] uppercase transition-all shadow-2xl hover:scale-105 flex items-center gap-3 group cursor-pointer border border-amber-300 rounded-xl"
+            className="px-10 py-4 sm:py-5 bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-[0.3em] uppercase transition-all shadow-md hover:scale-105 flex items-center gap-3 group cursor-pointer border border-slate-900 rounded-xl"
           >
             BRIDAL COUTURE
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -208,7 +208,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
 
           <button
             onClick={() => onExploreClick('COUTURE')}
-            className="px-10 py-4 sm:py-5 bg-slate-950/80 hover:bg-slate-900 text-white border border-amber-400/40 backdrop-blur-md font-bold text-xs sm:text-sm tracking-[0.3em] uppercase rounded-xl transition-all cursor-pointer shadow-xl hover:scale-105"
+            className="px-8 py-4 sm:py-5 bg-slate-900 hover:bg-slate-800 text-white border border-slate-900 font-bold text-xs sm:text-sm tracking-[0.3em] uppercase rounded-xl transition-all cursor-pointer shadow-md hover:scale-105"
           >
             EXPLORE COUTURE
           </button>

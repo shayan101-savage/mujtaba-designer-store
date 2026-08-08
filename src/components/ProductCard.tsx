@@ -40,7 +40,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <div
       onClick={() => onQuickView(product)}
-      className="group bg-white border border-stone-200/90 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-amber-300 flex flex-col cursor-pointer transform hover:-translate-y-1 relative"
+      className="group bg-white border border-stone-200/90 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-slate-300 flex flex-col cursor-pointer transform hover:-translate-y-1 relative"
     >
       {/* Image Gallery Thumbnail Container - Expanded Aspect Ratio */}
       <div className="relative aspect-[3/4] min-h-[380px] sm:min-h-[440px] w-full bg-stone-100 overflow-hidden">
@@ -66,12 +66,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Category & Sale Badges */}
         <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
           {product.salePrice && (
-            <span className="bg-amber-500 text-slate-950 text-xs font-bold tracking-widest uppercase px-3.5 py-1.5 rounded-lg shadow-md">
+            <span className="bg-slate-950 text-white text-xs font-bold tracking-widest uppercase px-3.5 py-1.5 rounded-lg shadow-sm">
               SALE
             </span>
           )}
           {product.isFeatured && (
-            <span className="bg-slate-950 text-amber-300 text-xs font-bold tracking-widest uppercase px-3.5 py-1.5 rounded-lg shadow-md border border-amber-400/30">
+            <span className="bg-slate-900 text-white text-xs font-bold tracking-widest uppercase px-3.5 py-1.5 rounded-lg shadow-sm border border-slate-200">
               FEATURED COUTURE
             </span>
           )}
@@ -93,15 +93,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {/* Quick View Button on Hover */}
-        <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
+        <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-white/95 via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
           <button
             onClick={(e) => {
               e.stopPropagation();
               onQuickView(product);
             }}
-            className="w-full py-3 bg-white/95 hover:bg-white text-slate-950 font-bold text-xs sm:text-sm tracking-[0.2em] uppercase rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-[0.2em] uppercase rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Eye className="w-4 h-4 text-amber-800" />
+            <Eye className="w-4 h-4 text-white" />
             Quick View
           </button>
         </div>
@@ -110,7 +110,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Card Information Body */}
       <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between bg-white border-t border-stone-100">
         <div>
-          <span className="text-xs uppercase font-bold tracking-[0.2em] text-amber-800 block mb-1.5">
+          <span className="text-xs uppercase font-bold tracking-[0.2em] text-slate-500 block mb-1.5">
             {product.category} {product.collection ? `• ${product.collection}` : ''}
           </span>
           <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-950 group-hover:text-amber-800 transition-colors line-clamp-1">
@@ -134,8 +134,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 onClick={() => setSelectedSize(sz)}
                 className={`text-xs px-3 py-1.5 rounded-lg border font-semibold transition-all cursor-pointer ${
                   selectedSize === sz
-                    ? 'border-amber-800 bg-amber-800 text-white font-bold shadow-xs'
-                    : 'border-stone-200 text-stone-700 hover:border-stone-400 bg-stone-50'
+                    ? 'border-slate-950 bg-slate-950 text-white font-bold shadow-sm'
+                    : 'border-stone-200 text-slate-700 hover:border-slate-400 bg-slate-100'
                 }`}
               >
                 {sz}
@@ -167,8 +167,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             onClick={handleAdd}
             className={`px-4 sm:px-5 py-3 text-xs font-bold tracking-[0.15em] uppercase rounded-xl flex items-center gap-2 transition-all cursor-pointer shadow-md ${
               addedAnimation
-                ? 'bg-emerald-700 text-white'
-                : 'bg-slate-950 hover:bg-amber-800 text-white'
+                ? 'bg-slate-950 text-white'
+                : 'bg-slate-950 hover:bg-slate-800 text-white'
             }`}
           >
             {addedAnimation ? (

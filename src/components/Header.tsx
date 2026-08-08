@@ -95,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({
           className="flex items-center gap-3 sm:gap-4 cursor-pointer group"
           onClick={() => onSelectCategory('ALL COLLECTIONS')}
         >
-          <div className="w-13 h-13 sm:w-16 sm:h-16 rounded-full border-2 border-amber-400/60 p-0.5 overflow-hidden bg-white shadow-md group-hover:scale-105 transition-transform flex-shrink-0">
+          <div className="w-13 h-13 sm:w-16 sm:h-16 rounded-full border-2 border-slate-200 p-0.5 overflow-hidden bg-white shadow-md group-hover:scale-105 transition-transform flex-shrink-0">
             <img
               src={logoImg}
               alt="Mujtaba Designer Logo"
@@ -106,7 +106,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-[0.3em] text-slate-950 uppercase leading-none font-ethnocentric">
               MUJTABA DESIGNER
             </span>
-            <span className="text-[9px] sm:text-[10px] tracking-[0.5em] text-amber-800 font-semibold uppercase mt-1">
+            <span className="text-[9px] sm:text-[10px] tracking-[0.5em] text-slate-500 font-semibold uppercase mt-1">
               HAUTE COUTURE
             </span>
           </div>

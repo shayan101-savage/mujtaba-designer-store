@@ -91,27 +91,27 @@ export const VideoShowcaseSection: React.FC<VideoShowcaseSectionProps> = ({
   };
 
   return (
-    <section className="w-full bg-slate-950 text-white py-16 sm:py-24 border-y border-slate-800/80 relative overflow-hidden">
-      {/* Background ambient gold glow */}
-      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
+    <section className="w-full bg-white text-slate-950 py-16 sm:py-24 border-y border-slate-200 relative overflow-hidden">
+      {/* Background ambient blur */}
+      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-slate-100 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold tracking-[0.3em] uppercase mb-3">
-            <Sparkles className="w-4 h-4 text-amber-400" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold tracking-[0.3em] uppercase mb-3">
+            <Sparkles className="w-4 h-4 text-slate-700" />
             HAUTE COUTURE CINEMATIC FILM
           </div>
-          <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl font-light tracking-[0.2em] text-white uppercase leading-tight">
+          <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl font-light tracking-[0.2em] text-slate-950 uppercase leading-tight">
             {showcaseTitle}
           </h2>
-          <p className="text-stone-300 text-sm sm:text-base md:text-lg font-light tracking-wide mt-4">
+          <p className="text-slate-600 text-sm sm:text-base md:text-lg font-light tracking-wide mt-4">
             {showcaseSubtitle}
           </p>
         </div>
 
         {/* Large Grand Video Player Container */}
-        <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.6)] border border-amber-500/20 bg-slate-900 group">
+        <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-white group">
           <video
             ref={videoRef}
             autoPlay
@@ -135,28 +135,28 @@ export const VideoShowcaseSection: React.FC<VideoShowcaseSectionProps> = ({
 
           {/* Video Overlay Top Badge */}
           <div className="absolute top-4 sm:top-6 left-4 sm:left-6 z-20 flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-full border border-amber-400/40 text-xs sm:text-sm font-semibold tracking-[0.2em] text-amber-300 shadow-xl">
-              <Film className="w-4 h-4 text-amber-400 animate-pulse" />
+            <div className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 text-xs sm:text-sm font-semibold tracking-[0.2em] text-slate-900 shadow-md">
+              <Film className="w-4 h-4 text-slate-900 animate-pulse" />
               <span>MUJTABA DESIGNER • OFFICIAL FILM 2026</span>
             </div>
           </div>
 
           {/* Video Control Buttons Top Right */}
-          <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-20 flex items-center gap-2 bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-white shadow-xl">
+          <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-20 flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 text-slate-900 shadow-md">
             <button
               onClick={togglePlay}
-              className="hover:text-amber-300 p-1.5 transition-colors cursor-pointer"
+              className="hover:text-slate-900 p-1.5 transition-colors cursor-pointer"
               title={isPlaying ? 'Pause Film' : 'Play Film'}
             >
-              {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+              {isPlaying ? <Pause className="w-5 h-5 text-slate-900" /> : <Play className="w-5 h-5 text-slate-900" />}
             </button>
             <div className="w-[1px] h-4 bg-white/20" />
             <button
               onClick={toggleMute}
-              className="hover:text-amber-300 p-1.5 transition-colors cursor-pointer"
+              className="hover:text-slate-900 p-1.5 transition-colors cursor-pointer"
               title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
             >
-              {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+              {isMuted ? <VolumeX className="w-5 h-5 text-slate-900" /> : <Volume2 className="w-5 h-5 text-slate-900" />}
             </button>
             <div className="w-[1px] h-4 bg-white/20" />
             <button

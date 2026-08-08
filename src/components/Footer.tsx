@@ -21,9 +21,9 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
   };
 
   return (
-    <footer className="bg-slate-950 text-stone-300 border-t border-slate-800/80 pt-16 pb-12 relative">
+    <footer className="bg-white text-slate-900 border-t border-slate-200 pt-16 pb-12 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800/80">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-200">
           {/* Col 1: Brand Info & Logo */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -36,10 +36,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 />
               </div>
               <div className="flex flex-col">
-                <span className="font-ethnocentric text-xl font-bold tracking-[0.35em] text-white uppercase leading-tight">
+                <span className="font-ethnocentric text-xl font-bold tracking-[0.35em] text-slate-950 uppercase leading-tight">
                   MUJTABA DESIGNER
                 </span>
-                <span className="text-[9px] tracking-[0.5em] text-amber-400 font-semibold uppercase">
+                <span className="text-[9px] tracking-[0.5em] text-slate-500 font-semibold uppercase">
                   HAUTE COUTURE
                 </span>
               </div>
@@ -52,7 +52,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 href="https://wa.me/923318858108"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:bg-emerald-700 text-white flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-full bg-white border border-slate-200 hover:bg-slate-100 text-slate-900 flex items-center justify-center transition-colors"
                 title="WhatsApp Support"
               >
                 <MessageSquare className="w-4 h-4" />
@@ -77,7 +77,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
                 href="https://www.instagram.com/mujtaba_designers_?utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:bg-rose-500 text-white flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-full bg-white border border-slate-200 hover:bg-slate-100 text-slate-900 flex items-center justify-center transition-colors"
                 title="Instagram"
               >
                 <Instagram className="w-4 h-4" />
@@ -105,7 +105,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
 
           {/* Col 2: Luxury Collections */}
           <div className="space-y-3">
-            <h4 className="font-serif text-xs font-semibold tracking-[0.3em] text-amber-400 uppercase">
+            <h4 className="font-serif text-xs font-semibold tracking-[0.3em] text-slate-900 uppercase">
               Collections
             </h4>
             <ul className="space-y-2 text-xs text-stone-400">
@@ -154,7 +154,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
 
           {/* Col 3: Support & Contact */}
           <div className="space-y-3">
-            <h4 className="font-serif text-xs font-semibold tracking-[0.3em] text-amber-400 uppercase">
+            <h4 className="font-serif text-xs font-semibold tracking-[0.3em] text-slate-900 uppercase">
               Boutique Support
             </h4>
             <ul className="space-y-2 text-xs text-stone-400">
@@ -187,7 +187,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onSelectCategory
 
           {/* Col 4: VIP Newsletter */}
           <div className="space-y-3">
-            <h4 className="font-serif text-xs font-semibold tracking-[0.3em] text-amber-400 uppercase">
+            <h4 className="font-serif text-xs font-semibold tracking-[0.3em] text-slate-900 uppercase">
               VIP Privileges
             </h4>
             <p className="text-xs text-stone-400 font-light leading-relaxed">

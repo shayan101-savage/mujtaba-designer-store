@@ -246,7 +246,7 @@ export default function App() {
 
   // ROUTE 2: MAIN BOUTIQUE WEBSITE ROUTE
   return (
-    <div className="min-h-screen bg-stone-50 font-sans text-slate-950 selection:bg-amber-800 selection:text-white flex flex-col antialiased">
+    <div className="min-h-screen bg-white font-sans text-slate-950 selection:bg-amber-800 selection:text-white flex flex-col antialiased app-white-theme">
       {/* Branded Loading Screen */}
       {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
 
